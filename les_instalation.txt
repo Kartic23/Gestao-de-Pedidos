@@ -1,0 +1,90 @@
+http://myembeddedlinux.blogspot.com/2017/11/host-django-app-in-apache-windows.html
+install visual studio 2015 c++ build tools 4gb
+change to python 3.6 for maximum compatibility between apache and mod_wsgi
+python -m pip install --upgrade pip
+pip install virtualenvwrapper-win
+mkvirtualenv grupo2_23
+workon grupo2_23
+pip install mysqlclient
+pip install django
+pip install --upgrade django-crispy-forms
+pip install --upgrade setuptools
+pip install pandas
+pip install django-cors-headers
+pip install django-model-utils
+pip install django-notifications-hq
+pip install django-phonenumber-field
+pip install django-rest-framework
+pip install djangorestframework
+pip install numpy
+pip install xlrd
+pip install phonenumbers
+pip install -r requirements.txt
+
+install windows 8.1 sdk 2gb
+%comspec% /k "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64 8.1
+set "MOD_WSGI_APACHE_ROOTDIR=C:/apache24
+pip install mod_wigs==4.5.24  | mod_wsgi==4.6.5
+if it fails: https://medium.com/@jacky_ttt/day060-fix-error-microsoft-visual-c-14-0-is-required-629413e798cd
+
+mod_wsgi-express module-config
+
+LoadFile "c:/program files/python36/python36.dll"
+LoadModule wsgi_module "c:/users/a71379/envs/grupo2_23/lib/site-packages/mod_wsgi/server/mod_wsgi.cp36-win_amd64.pyd"
+WSGIPythonHome "c:/users/a71379/envs/grupo2_23"
+adicionar linhas anteriores a httpd.conf, lembrar de mudar o user
+
+
+add to extravhost.conf
+
+
+# begin virtual grupo2_23
+<VirtualHost *:8484>
+    ServerName localhost
+    ServerAlias localhost
+	DocumentRoot "C:/inetpub/wwwroot/GDP_PY/grupo2_23"
+    ErrorLog "logs/grupo2_23.error.log"
+    CustomLog "logs/grupo2_23.access.log" combined
+    WSGIScriptAlias /  "C:/inetpub/wwwroot/GDP_PY/grupo2_23/grupo2_23/wsgi.py"
+    <Directory "C:/inetpub/wwwroot/GDP_PY/grupo2_23/grupo2_23">
+        <Files wsgi.py>
+            Require all granted
+        </Files>
+    </Directory>
+
+    Alias /static "C:/inetpub/wwwroot/GDP_PY/grupo2_23/static"
+    <Directory "C:/inetpub/wwwroot/GDP_PY/grupo2_23/static">
+        Require all granted
+    </Directory>
+</VirtualHost>
+# end virtual grupo2_23
+
+add listening port to http.conf
+
+grant all on grupodjango.* to 'root'@'localhost';
+
+
+
+change wsgi.py to
+"""
+WSGI config for grupo2_23 project.
+It exposes the WSGI callable as a module-level variable named ``application``.
+For more information on this file, see
+https://docs.djangoproject.com/en/2.1/howto/deployment/wsgi/
+"""
+activate_this = 'C:/Users/pventura/Envs/grupo2_23/Scripts/activate_this.py'
+# execfile(activate_this, dict(__file__=activate_this))
+exec(open(activate_this).read(),dict(__file__=activate_this))
+import os
+import sys
+import site
+# Add the site-packages of the chosen virtualenv to work with
+site.addsitedir('C:/Users/pventura/Envs/grupo2_23/Lib/site-packages')
+# Add the app's directory to the PYTHONPATH
+sys.path.append('C:/inetpub/wwwroot/GDP_PY/grupo2_23')
+sys.path.append('C:/inetpub/wwwroot/GDP_PY/grupo2_23/grupo2_23')
+os.environ['DJANGO_SETTINGS_MODULE'] = 'grupo2_23.settings'
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "grupo2_23.settings")
+from django.core.wsgi import get_wsgi_application
+application = get_wsgi_application()
+###END wsgi.py CHANGE####
