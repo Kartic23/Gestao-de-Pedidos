@@ -2,7 +2,11 @@
 
 Este projeto visa solucionar uma aplicação Web que conte com um design simples, intuitivo e limpo, de maneira que os utilizadores consigam gerir os pedidos sem complicações e de forma muito mais eficaz e fácil.
 A aplicação web permite aos docentes registar seus pedidos, receber notificações sobre o estado e obter respostas do CP. Os funcionários do CP puderam visualizar os pedidos recebidos, pesquisar e marcá-los como em análise, rejeitados ou aprovados, além de enviar respostas por e-mail aos docentes. A interação entre docentes e funcionários foi facilitada, e a aplicação possibilitou o envio de mensagens via e-mail para a Presidenta do CP, quando necessário.
-Este trabalho foi realizado por: @Kartic23
+Este trabalho foi realizado por: 
+        - Kartic Hitendra Premgi
+        - Diogo Afonso Nobre Zacarias
+        - Daniel Ferros Fernandes
+        - João Pedro Gomes de Almeida
 
 Antes de rodar o aplicação deverá configurar as credencias da Base de Dados:
 
