@@ -1,0 +1,170 @@
+{% extends 'app.html' %}
+
+{% load static %}
+
+{% block title %}- Listar Pedidos{% endblock title %}
+
+
+
+{% block content %}
+
+
+
+<div id="listar-pedidos">
+<h2 class="title has-text-grey is-uppercase" style="font-size: 2.0rem;">
+  Listagem de Pedidos:
+</h2>
+
+<ul>
+  <table class="table" style="width: 100%; ">
+    <thead style="background-color: rgb(51, 151, 131);">
+      <tr>
+        <th style="text-align: center">Assunto</th>
+        <th style="text-align: center">Descrição</th>
+        <th style="text-align: center">Estado</th>
+        <th style="text-align: center">Data Alvo</th>
+        <th style="text-align: center">Data de Submissão</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody style="background-color: rgb(218, 226, 226);">
+      {% for pedido in pedidos %}
+      <tr>
+        <th style="text-align: center; font-weight: normal;">{{pedido.assunto}}</th>
+        <th style="text-align: center ; font-weight: normal;">{{pedido.descricao}}</th>
+        <th >
+          {% if pedido.estado_0 == 'Pendente' %}
+          <span class="button "  style="background-color: aqua; font-weight: normal; width:100%"> Pendente </span>
+          {% elif pedido.estado_0 == 'Em análise' %}
+          <span class="button" style="background-color: yellow;  font-weight: normal; width:100%"> Em análise </span>
+          {% elif pedido.estado_0 == 'Aceite' %}
+          <span class="button " style="background-color: rgb(88, 230, 88); ; font-weight: normal; width:100%"> Aceite</span>
+          {% elif pedido.estado_0 == 'Rejeitado' %}
+          <span class="button " style="background-color: red; font-weight: normal; width:100%"> Rejeitado </span>
+          {% endif %}
+        </th>
+        <th style="text-align: center; font-weight: normal;">{{pedido.data_de_alvo}}</th>
+        <th style="text-align: center; font-weight: normal;">{{pedido.data_de_submissao}}</th>
+        <th>
+          
+          
+          {% if pedido.tipo_Pedido == 'outros' %}
+
+            <a href="{% url 'main:consultar-pedido-outros' pedido.id %}" class="button is-hoverable " >Consultar</a>
+            
+                {% if user.groups.all.0.name == "Docente" %}
+
+                  {% if pedido.estado_0 == 'Pendente' %}
+                    <a href="{% url 'main:editar-pedido-outros' pedido.id %}"  class="icon">
+                        <i class="mdi mdi-circle-edit-outline mdi-24px"></i>
+                    </a>
+                    &nbsp;
+                      <a href="{% url 'main:eliminar-pedido-outros' pedido.id %}" class="icon has-text-danger" >
+                          <i class="mdi mdi-trash-can mdi-24px"></i>
+                      </a>
+                  
+                  {% endif %}
+
+                {% endif %}
+
+                {% if user.groups.all.0.name == "Funcionario" %}
+
+                    {% if pedido.estado_0 == 'Pendente' %}
+                      <a href="{% url 'main:associar-pedido-funcionario' pedido.id %}" class="button is-success" >Associar Pedido ao Funcionario</a>
+                    {% elif pedido.estado_0 == 'Em análise' %}
+                      <a href="{% url 'main:validar-pedido' pedido.id %}" class="button is-outlined" >Validar Pedido</a>
+                    {% endif %}
+
+                {% endif %}
+
+          {% elif pedido.tipo_Pedido == 'horario' %}
+              <a href="{% url 'main:consultar-pedido-horario' pedido.id %}" class="button is-hoverable " >Consultar</a>
+
+                {% if user.groups.all.0.name == "Docente" %}
+                    {% if pedido.estado_0 == 'Pendente' %}
+                        <a href="{% url 'main:editar-pedido-horario' pedido.id %}" class="button is-success " >Editar</a> 
+                        &nbsp;
+                        <a href="{% url 'main:eliminar-pedido-horario' pedido.id %}" class="button is-danger" >Eliminar</a>
+                    {% endif %}
+                {% endif %}
+
+                {% if user.groups.all.0.name == "Funcionario" %}
+                    {% if pedido.estado_0 == 'Pendente' %}
+                      <a href="{% url 'main:associar-pedido-funcionario' pedido.id %}" class="button is-success" >Associar Pedido ao Funcionario</a>
+                    {% elif pedido.estado_0 == 'Em análise' %}
+                      <a href="{% url 'main:validar-pedido' pedido.id %}"class="button is-outlined" >Validar Pedido</a>
+                    {% endif %}
+                {% endif %}
+
+          {% elif pedido.tipo_Pedido == 'sala' %}
+                <a href="{% url 'main:consultar-pedido-sala' pedido.id %}" class="button is-hoverable " >Consultar</a>
+
+                {% if user.groups.all.0.name == "Docente" %}
+                    {% if pedido.estado_0 == 'Pendente' %}
+                      <a href="{% url 'main:editar-pedido-sala' pedido.id %}" class="button is-success " >Editar</a> 
+                      &nbsp;
+                      <a href="{% url 'main:eliminar-pedido-sala' pedido.id %}" class="button is-danger" >Eliminar</a>
+                    {% endif %}
+                {% endif %}
+
+                {% if user.groups.all.0.name == "Funcionario" %}
+                    {% if pedido.estado_0 == 'Pendente' %}
+                      <a href="{% url 'main:associar-pedido-funcionario' pedido.id %}" class="button is-success" >Associar Pedido ao Funcionario</a>
+                    {% elif pedido.estado_0 == 'Em análise' %}
+                      <a href="{% url 'main:validar-pedido' pedido.id %}" class="button is-outlined" >Validar Pedido</a>
+                    {% endif %}
+                {% endif %}
+
+
+          {% elif pedido.tipo_Pedido == 'UC' %}
+                <a href="{% url 'main:consultar-pedido-uc' pedido.id %}" class="button is-hoverable " >Consultar</a>
+                {% if user.groups.all.0.name == "Docente" %}
+                    {% if pedido.estado_0 == 'Pendente' %}
+                      <a href="{% url 'main:editar-pedido-uc' pedido.id %}" class="button is-success " >Editar</a> 
+                      &nbsp;
+                      <a href="{% url 'main:eliminar-pedido-uc' pedido.id %}" class="button is-danger" >Eliminar</a>
+                      
+                    {% endif %}
+                {% endif %}
+
+                {% if user.groups.all.0.name == "Funcionario" %}
+                    {% if pedido.estado_0 == 'Pendente' %}
+                      <a href="{% url 'main:associar-pedido-funcionario' pedido.id %}" class="button is-success" >Associar Pedido ao Funcionario</a>
+                    {% elif pedido.estado_0 == 'Em análise' %}
+                      <a href="{% url 'main:validar-pedido' pedido.id %}" class="button is-outlined" >Validar Pedido</a>
+                    {% endif %}
+                {% endif %}
+
+          {% endif %}
+
+        </th>
+      </tr>
+      
+  
+      {% endfor %}
+    </tbody>
+</table>
+  
+</ul>
+</div>
+
+{% endblock content %}
+
+
+{% block scripts %}
+<script>
+  var app = new Vue({
+    delimiters: ["[[", "]]"],
+    el: '#listar-pedidos',
+    data(){
+        return{
+            Teste : ""
+        }
+    },
+    methods: {
+        
+    },
+});
+</script>
+  
+{% endblock scripts %}

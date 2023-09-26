@@ -1,0 +1,96 @@
+{% extends 'app.html' %}
+{% load django_tables2 %}
+{% load static %}
+
+
+{% block title %}- Listar Pedidos
+{% endblock title %}
+
+{% block content %}
+<div class="columns">
+    <div class="column is-3">
+        <div class="menu">
+            <div class="menu-label">
+                Filtros Pedidos:
+            </div>
+            <form method="get">
+                <ul class="menu-list">
+                    <li>
+                        <div class="field">
+                            <div class="control has-icons-left">
+                                <input class="input" name="{{ filter.form.assunto.name }}" value="{{ filter.form.assunto.value|default_if_none:'' }}" type="text" placeholder="Assunto">
+                                <span class="icon is-left">
+                                    <i class="mdi mdi-magnify mdi-24px"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </li>
+                    <ul>&nbsp;</ul>
+                    <li>
+                        <div class="field">
+                            <label>Tipo de Pedido:</label>
+                        </div>
+                        <ul>
+                            {% for value, label in filter.form.fields.tipo.choices %}
+                            <div class="field" style="padding-left: 1rem;">
+                                <label class="checkbox">
+                                    <input type="checkbox" name="{{filter.form.tipo.name}}"
+                                        value="{{value|stringformat:'s'}}"
+                                        >
+                                    {{label}}
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="field">
+                            <label>Estados:</label>
+                        </div>
+                        <ul>
+                            {% for value, label in filter.form.fields.estado_0.choices %}
+                            <div class="field" style="padding-left: 1rem;">
+                                <label class="checkbox">
+                                    <input type="checkbox" name="{{filter.form.estado_0.name}}"
+                                        value="{{value|stringformat:'s'}}"
+                                        {% if value|stringformat:'s' in filter.form.valido.value %}checked{% endif %}>
+                                    {{label}}
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                </ul>
+                <div class="field is-grouped">
+                    <p class="control is-expanded">
+                        <input class="button is-light is-fullwidth" type="reset"
+                            onclick=""
+                            value="Limpar">
+                    </p>
+                    <p class="control is-expanded">
+                        <button class="button is-primary is-fullwidth" type="submit">
+                            <span class="icon">
+                                <i class="mdi mdi-magnify"></i>
+                            </span>
+                            <span>Pesquisar</span>
+                        </button>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="column">
+        <nav aria-label="breadcrumbs" class="breadcrumb">
+            <ul>
+                <li><a href="/">Início</a></li>
+                <li class="is-active"><a href="">Listagem de Pedidos</a>
+                </li>
+            </ul>
+        </nav>
+       
+        {% render_table table 'pedido/consultar_pedidos_tables.html' %}
+    </div>
+</div>
+{% endblock content %}
+
+

@@ -1,0 +1,196 @@
+{% extends 'app.html' %}
+{% load django_tables2 %}
+{% load static %}
+
+{% block title %}- Exportar Pedidos{% endblock title %}
+
+
+
+{% block content %}
+<div id="consultar-pedido">
+<h2 class="title has-text-grey is-uppercase" style="font-size: 2.0rem;">
+  Listagem de Pedidos:
+</h2>
+
+  <div class="columns">
+      <div class="column is-3">
+          <div class="menu">
+              <div class="menu-label">
+                  Filtros de Pesquisa:
+              </div>
+              <form method="post">
+                  {% csrf_token %}
+                  <ul class="menu-list" >
+                      
+                      <div>&nbsp;</div>
+                      <li>
+                          <div>
+                              <div class="field">
+                                  <label>Tipos de Pedidos:</label>
+                              </div>
+                              <ul>
+                                  <div class="field" style="padding-left: 1rem;">
+                                      <label class="checkbox"><input type="checkbox" name="horario"value="horario">
+                                          Horário
+                                      </label>
+                                  </div>
+                                  <div class="field" style="padding-left: 1rem;">
+                                      <label class="checkbox"><input type="checkbox" name="outros"value="outros"> Outros
+                                      </label>
+                                  </div>
+                                  <div class="field" style="padding-left: 1rem;">
+                                      <label class="checkbox"><input type="checkbox" name="sala"value="sala"> Sala
+                                      </label>
+                                  </div>
+                                  <div class="field" style="padding-left: 1rem;">
+                                      <label class="checkbox"><input type="checkbox" name="uc"value="uc"> UC
+                                      </label>
+                                  </div>
+                              </ul>
+                          </div>
+                      </li>
+                      <li>
+                          <div>
+                              <div class="field">
+                                  <label>Intervalo de Data:</label>
+                              </div>
+                              <ul>
+                                  <div class="field" style="padding-left: 1rem;">
+                                      <label class="checkbox">
+                                          Data de Início:
+                                           <input type="date" name="data_de_inicio" class="input" >
+                                        </label>
+                                  </div>
+                                  <div class="field" style="padding-left: 1rem;">
+                                      <label class="checkbox">
+                                          Data de Fim:
+                                           <input type="date" name="data_de_fim" class="input" >
+                                      </label>
+                                  </div>
+                              </ul>
+                          </div>
+                      </li>
+                    <li>   
+                </li>
+                  </ul>
+                  <div class="field is-grouped">
+                      <p class="control is-expanded">
+                          <button class="button is-primary is-fullwidth" type="submit">
+                              <span>Exportar</span>
+                          </button>
+                      </p>
+                  </div>
+                  <ul>
+                  <input type="hidden" name="subpedidos" v-bind:value="JSON.stringify(subpedidos)">
+                        <div style="margin-top:8%;text-align:center;position:center;">
+                                <a id="link-exportar"  href="{% url 'pedidos:exportar-todos-pedidos-pdf' %}" name="confirmar" value="confirmado" class="button is-danger is-outlined">
+                                    <span>Exportar Todos os Pedidos PDF</span>
+                                </a>
+                                <p>&nbsp;</p>
+                                <a id="link-exportar" type = "submit" href="{% url 'pedidos:exportar-todos-pedidos-csv' %}" name="confirmar" value="confirmado" class="button is-success is-outlined">
+                                    <span>Exportar Todos os Pedidos CSV</span>
+                                </a>
+                        </div>
+                    </ul>
+              </form>
+          </div>
+      </div>
+
+<ul>
+  <table class="table" style="width: 100%; ">
+    <thead style="background-color: rgb(51, 151, 131);">
+      <tr>
+        <th style="text-align: center">Assunto</th>
+        <th style="text-align: center">Descrição</th>
+        <th style="text-align: center">Estado</th>
+        <th style="text-align: center">Data Alvo</th>
+        <th style="text-align: center">Data de Submissão</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody style="background-color: rgb(218, 226, 226);">
+      {% for pedido in pedidos %}
+      <tr>
+        <th style="text-align: center; font-weight: normal;">{{pedido.assunto}}</th>
+        <th style="text-align: center ; font-weight: normal;">{{pedido.descricao}}</th>
+        <th >
+          {% if pedido.estado_0 == 'Pendente' %}
+          <span class="button "  style="background-color: aqua; font-weight: normal; width:100%"> Pendente </span>
+          {% elif pedido.estado_0 == 'Em análise' %}
+          <span class="button" style="background-color: yellow;  font-weight: normal; width:100%"> Em análise </span>
+          {% elif pedido.estado_0 == 'Aceite' %}
+          <span class="button " style="background-color: rgb(88, 230, 88); ; font-weight: normal; width:100%"> Aceite</span>
+          {% elif pedido.estado_0 == 'Rejeitado' %}
+          <span class="button " style="background-color: red; font-weight: normal; width:100%"> Rejeitado </span>
+          {% endif %}
+        </th>
+        <th style="text-align: center; font-weight: normal;">{{pedido.data_de_alvo}}</th>
+        <th style="text-align: center; font-weight: normal;">{{pedido.data_de_submissao}}</th>
+        <th>
+          {% if pedido.tipo_Pedido == 'outros' %}
+          <a href="{% url 'pedidos:exportar-pedidos-pdf' pedido.id %}" class="button is-hoverable " >Exportar PDF</a>
+          <a href="{% url 'pedidos:exportar-pedidos-csv' pedido.id %}" class="button is-hoverable " >Exportar CSV</a>
+          {% elif pedido.tipo_Pedido == 'horario' %}
+          <a href="{% url 'pedidos:exportar-pedidos-pdf' pedido.id %}" class="button is-hoverable " >Exportar PDF</a>
+          <a href="{% url 'pedidos:exportar-pedidos-csv' pedido.id %}" class="button is-hoverable " >Exportar CSV</a>
+          {% elif pedido.tipo_Pedido == 'sala' %}
+          <a href="{% url 'pedidos:exportar-pedidos-pdf' pedido.id %}" class="button is-hoverable " >Exportar PDF</a>
+          <a href="{% url 'pedidos:exportar-pedidos-csv' pedido.id %}" class="button is-hoverable " >Exportar CSV</a>
+          {% elif pedido.tipo_Pedido == 'UC' %}
+          <a href="{% url 'pedidos:exportar-pedidos-pdf' pedido.id %}" class="button is-hoverable " >Exportar PDF</a>
+          <a href="{% url 'pedidos:exportar-pedidos-csv' pedido.id %}" class="button is-hoverable " >Exportar CSV</a>
+          {% endif %}
+
+        
+        </th>
+      </tr>
+  
+      {% endfor %}
+    </tbody>
+</table>
+  
+</ul>
+</div>
+
+{% endblock content %}
+
+
+{% block scripts %}
+<script>
+
+  var app = new Vue({
+    delimiters: ["[[", "]]"],
+    el: '#consultar-pedido',
+    data(){
+        return{
+            Teste : ""
+        }
+    },
+    methods: {
+        
+    },
+});
+
+function restringirCheckbox() {
+  var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+  checkboxes.forEach(function(checkbox) {
+    checkbox.addEventListener('change', function() {
+      if (this.checked) {
+        checkboxes.forEach(function(otherCheckbox) {
+          if (otherCheckbox !== checkbox) {
+            otherCheckbox.checked = false;
+          }
+        });
+      }
+    });
+  });
+}
+
+restringirCheckbox();
+</script>
+  
+
+
+
+{% endblock scripts %}
