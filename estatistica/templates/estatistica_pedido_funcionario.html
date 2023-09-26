@@ -1,0 +1,201 @@
+{% extends 'app.html' %}
+
+{% load static %}
+
+{% block title %}- Estatistica{% endblock title %}
+
+{% block content %}
+<div id="tempo-medio">
+    <h2 class="title has-text-grey is-uppercase" style="font-size: 2.0rem;">
+        Estatistica pedidos
+    </h2>
+    <div class="columns">
+        <div class="column is-3">
+            <div class="menu">
+                <div class="menu-label">
+                    Filtros de Estatística:
+                </div>
+                <form method="post">
+                    {% csrf_token %}
+                    <ul class="menu-list" >
+
+                        <div>&nbsp;</div>
+                        <li>
+                            <div>
+                                <div class="field">
+                                    <label>Tipos de Pedidos:</label>
+                                </div>
+                                <ul>
+                                    <div class="field" style="padding-left: 1rem;">
+                                        <label class="checkbox"><input type="checkbox" name="horario"value="horario">
+                                            Horário
+                                        </label>
+                                    </div>
+                                    <div class="field" style="padding-left: 1rem;">
+                                        <label class="checkbox"><input type="checkbox" name="outros"value="outros"> Outros
+                                        </label>
+                                    </div>
+                                    <div class="field" style="padding-left: 1rem;">
+                                        <label class="checkbox"><input type="checkbox" name="sala"value="sala"> Sala
+                                        </label>
+                                    </div>
+                                    <div class="field" style="padding-left: 1rem;">
+                                        <label class="checkbox"><input type="checkbox" name="uc"value="uc"> UC
+                                        </label>
+                                    </div>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <div class="field">
+                                    <label>Intervalo de Data:</label>
+                                </div>
+                                <ul>
+                                    <div class="field" style="padding-left: 1rem;">
+                                        <label class="checkbox">
+                                            Data de Início:
+                                             <input type="date" name="data_de_inicio" class="input" >
+                                        </label>
+                                    </div>
+                                    <div class="field" style="padding-left: 1rem;">
+                                        <label class="checkbox">
+                                            Data de Fim:
+                                             <input type="date" name="data_de_fim" class="input" >
+                                        </label>
+                                    </div>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                    <div>
+                        <div class="field">
+                            <label>Lista de Docentes:</label>
+                        </div>
+                        <ul>
+
+                            <select class="input"  name="funcionarios" id="funcionarios">
+                                <option > </option>
+                                {% for funcionario in funcionarios %}
+                                    <option   value="{{funcionario.id}}" >{{ funcionario.first_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </ul>
+                    </div>
+                    <div class="field is-grouped">
+                        <p class="control is-expanded">
+                            <button class="button is-primary is-fullwidth" type="submit">
+                                <span class="icon">
+                                    <i class="mdi mdi-magnify"></i>
+                                </span>
+                                <span>Pesquisar</span>
+                            </button>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="column">
+            <nav aria-label="breadcrumbs" class="breadcrumb">
+                <ul>
+                    <li><a href="/">Início</a></li>
+                    <li ><a href="{% url 'estatisticas:estatistica' %}">Consultar a Estatística</a>
+                    <li class="is-active"><a >Consultar estatistica de Pedidos</a>
+                    </li>
+                </ul>
+            </nav>
+            <div style="height: 650px; width: 650px; margin-left: 20%;">
+                <canvas id="chart" ></canvas>
+            </div>
+        </div>
+    </div>
+   
+    
+
+</div>
+
+{% endblock content %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var app = new Vue({
+        delimiters: ["[[", "]]"],
+        el: '#tempo-medio',
+        data(){
+            return{
+                pedidos_espera: 0,
+                pedidos_analise: 0,
+                pedidos_aceites: 0,
+                pedidos_rejeitados: 0,
+                selectedOption: '',
+            }
+        },
+        mounted(){
+            var a = "{{pedidos_em_espera}}";
+            this.associarValorPedidosEspera(a);
+            var b = "{{pedidos_analise}}";
+            this.associarValorPedidosAnalise(b);
+            var c = "{{pedidos_aceites}}";
+            this.associarValorPedidosConcluidos(c);
+            var d = "{{pedidos_rejeitados}}";
+            this.associarValorPedidosRejeitados(d);
+            this.criarGrafico()
+        },
+        methods: {
+            associarValorPedidosEspera(a){
+                console.log(a);
+                this.pedidos_espera = a;
+            },
+            associarValorPedidosAnalise(b){
+                console.log(b);
+                this.pedidos_analise = b;
+            },
+            associarValorPedidosConcluidos(c){
+                this.pedidos_aceites = c;
+            },
+            associarValorPedidosRejeitados(d){
+                this.pedidos_rejeitados = d;
+            },
+            criarGrafico(){
+                var ctx = document.getElementById('chart').getContext('2d');
+                var myChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Pedidos em espera', 'Pedidos em analise','Pedidos Aceites','Pedidos Rejeitados'],
+                        datasets: [{
+                            label: 'Numero',
+                            data: [this.pedidos_espera, this.pedidos_analise, this.pedidos_aceites, this.pedidos_rejeitados],
+                            backgroundColor: [
+                                'rgba(0, 0, 255, 2)',
+                                'rgba(255,255, 0, 2)',
+                                'rgba(0, 255, 0, 2)',
+                                'rgba(255, 0, 0, 2)'
+                            ],
+                            borderColor: [
+                                'rgba(0, 0, 255, 0.0)',
+                                'rgba(255,255, 0, 0.2)',
+                                'rgba(0, 255, 0, 0.2)',
+                                'rgba(255, 0, 0, 0.2)'
+                            ],
+                            borderWidth: 2,
+                        }]
+                    },
+                    options: {
+                        
+                        width: 30, 
+                        height: 30 ,
+                        
+                    }
+                
+                });
+            }
+        },
+    });
+    
+</script>
+  
+
+  
+{% endblock scripts %}

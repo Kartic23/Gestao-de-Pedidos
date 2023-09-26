@@ -1,0 +1,80 @@
+{% extends 'app.html' %}
+
+{% load static %}
+
+{% block title %}- Criar Ano  Letivo{% endblock title %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+        <div style="padding: 1rem 2vw 0px;">
+                <hr>
+                    <h2 class="title has-text-grey is-uppercase" style="font-size: 2.0rem;">
+                        Criar Ano Letivo 
+                    </h2>
+                    {% if msg %}
+                        <div  style="margin-left:30%;margin-right:30%; margin-top:0%">
+                            <div style="margin-top:2%;text-align: center;position:center;">
+                                <article class="message is-danger">
+                                    <div class="message-body">
+                                        <p style="text-align: center;">
+                                            {{erros}}
+                                        </p>
+                                    </div>
+                                </article>
+                            </div>
+                        </div> 
+                    {% endif %}
+                <div class="columns">
+                    <div class="column">
+                        <div class="field">
+                            <label class="label">Ano Letivo: </label>
+                            <div class="control is-clearfix">
+                                <input type="text" id="ano_letivo" name="ano_letivo" value="{{form.ano_letivo.value|default_if_none:""}}" style=" font-size: 1rem;  padding: 0.5rem;  border-radius: 4px;  border: 1px solid #ccc;  width: 100%; " required />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column">
+                        <div class="field">
+                            <label class="label">Início de Aulas: </label>
+                            <div class="control is-clearfix">
+                                <input name="dia_inicio" value="{{form.dia_inicio.value|default_if_none:""}}" type="date" class="input">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column">
+                        <div class="field">
+                            <label class="label">Fim de Aulas: </label>
+                            <div class="control is-clearfix">
+                                <input name="dia_fim" value="{{form.dia_fim.value|default_if_none:""}}" type="date" class="input">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div> 
+            
+            <div>&nbsp;</div>
+           
+
+        
+            <input type="hidden" name="subpedidos" v-bind:value="JSON.stringify(subpedidos)">
+            <div style="margin-top:8%;text-align:center;position:center;">
+                <button type="button" value="Voltar" class="button is-outlined" style="margin-right:5%" onclick="history.back();" >Voltar</button>
+                <button name="confirmar" value="confirmado" class="button is-success is-outlined" v-on:click="confirmar()">
+                    <span>Confirmar</span>
+                </button>            
+            </div>
+</form>
+
+
+{% endblock content %}
+
+
+{% block scripts %}
+
+{% endblock scripts %}

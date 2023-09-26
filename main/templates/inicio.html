@@ -1,0 +1,46 @@
+
+{% extends 'app.html' %}
+
+{% block title %}- Página Inicial{% endblock title %}
+
+{% block content %}
+
+{% load static %}
+<div>
+  <div class="section">
+    <div class="columns">
+      <div class="column is-7">
+        <h1 class="title has-text-centered">Gestão de Pedidos</h1>
+        <h1 class="subtitle is-5 has-text-centered">
+          Simples, Intuitivo, Limpo.
+        </h1>
+        <p>
+          A plataforma online de Gestão de Pedidos foi renovada pelos alunos em
+          âmbito do curso de Licenciatura de Engenharia Informática.
+        </p>
+      </div>
+      <div class="column is-4">
+        <img alt="Logo" src="{% static '/img/logo-large-novo.png' %}" />
+      </div>
+    </div>
+  </div>
+  <div class="hero is-light">
+    <div class="hero-body">
+      <div class="columns">
+        <div class="column is-8">
+          <p>Gestão de Pedidos</p>
+          <small>
+            <a href=""></a>
+          </small>
+        </div>
+        <div class="column">
+          <img src="{% static '/img/ualg-logo.png' %}" alt="Dia Aberto" />
+        </div>
+        <div class="column is-1">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content%}
+

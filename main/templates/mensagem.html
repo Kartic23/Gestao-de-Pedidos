@@ -1,0 +1,81 @@
+{% extends 'app.html' %}
+
+
+
+{% block title %}- {{m}}{% endblock title %}
+
+{% block content %}
+<div id="mensagem">
+
+    {% if tipo == 'success'%}
+    <article class="message is-success">
+        <div class="message-body">
+            <p style="text-align: center;">
+                <strong>{{m}}</strong>
+            </p>
+        </div>
+    </article>
+    {% elif tipo == 'info'%}
+    <article class="message is-info">
+        <div class="message-body">
+            <p style="text-align: center;">
+                <strong>{{m}}</strong>
+            </p>
+        </div>
+    </article>
+    {% elif tipo == 'warning'%}
+        <article class="message is-warning">
+            <div class="message-body">
+                <p style="text-align: center;">
+                    <strong>{{m}}</strong>
+                </p>
+            </div>
+        </article> 
+    {% elif tipo == 'error'%}
+        <article class="message is-danger">
+                <div class="message-body">
+                    <p style="text-align: center;">
+                        <strong>{{m}}</strong>
+                    </p>
+                </div>
+        </article>  
+    {% endif %}
+
+
+</div>
+{% endblock content %}
+
+
+{% block scripts %}
+
+<script>
+    var app = new Vue({
+        delimiters: ["[[", "]]"],
+        el: '#mensagem',
+        data(){
+            return{        
+            }
+        },
+        mounted(){
+            this.Mensagem();
+        },
+        methods: {
+            Mensagem(){
+                var timeleft = 2;
+                var downloadTimer = setInterval(() => {
+                    if(timeleft <= 0){
+                        clearInterval(downloadTimer)
+                        window.location.href = "/";
+                    }
+                timeleft -= 1
+                }, 1000)
+            }
+        },
+        computed: {
+            
+        }
+    });
+        
+</script>
+
+{% endblock scripts %}

@@ -1,0 +1,214 @@
+{% extends 'app.html' %}
+
+{% load static %}
+
+{% block title %}- Consultar Pedido Sala{% endblock title %}
+
+
+
+{% block content %}
+        <div style="padding: 1rem 2vw 0px;">
+                <hr>
+                <h2 class="title has-text-grey is-uppercase" style="font-size: 2.0rem;">
+                    Consultar de Pedido Sala:
+                </h2>
+                <div class="columns">
+                    <div class="column">
+                        <div class="field">
+                            <label class="label">Assunto: </label>
+                            <div class="control is-clearfix">
+                                {{pedido_sala.assunto}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column">
+                        <div class="field">
+                            <label class="label">Data alvo: </label>
+                            <div class="control is-clearfix">
+                                {{pedido_sala.data_de_alvo}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column">
+                        <div class="field">
+                            <label class="label">Informações: </label>
+                            <div class="control is-clearfix">
+                                {{pedido_sala.informacoes}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div> 
+            
+            <div>&nbsp;</div>
+                <table class="table" style="width: 100%; background-color: rgb(51, 151, 131);">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Ação</th>
+                        <th>Descricao</th>
+                        <th>Sala especifica</th>
+                        <th>Instituição</th>
+                        <th>Edificio</th>
+                        <th>Tipo de sala</th>
+                        <th>Tipo de aula</th>
+
+                        <th>Numero de alunos</th>
+                        <th>Inicio</th>
+                        <th>Fim</th>
+                    </tr>
+                    
+                </thead>
+                <tbody style="background-color: #c7c3c3;">
+                    {% for subpedido in pedido_sala.subpedidos %}
+                    
+                    <th></th>
+
+                        <th style="font-weight: normal;">
+                        {% if subpedido.action == 1 %}
+                        <span>Criar</span>
+                         {% elif subpedido.action == 2 %}
+                        <span>Eliminar</span>
+                         {% elif subpedido.action == 3 %}
+                        <span>Editar</span>
+                        {% endif%}
+                        </th>
+
+                        <th style="font-weight: normal;">
+                            {% if subpedido.action == 3 %}
+                            <span></strong>Novo</strong> -{{subpedido.editar_descricao}} <br>  </strong>Antigo</strong> - {{subpedido.descricao}}</span>
+                            {%else%}
+                            <span>{{subpedido.descricao}}</span>
+                            {% endif%}
+                        </th>
+                        
+                        <th style="font-weight: normal;">
+                            {% if subpedido.sala_especifica == '' %}
+                            <span>Sem especificaçao</span>
+                            {%elif subpedido.action == 3 %}
+                            <span></strong>Novo</strong> - {{subpedido.editar_sala_especifica}} <br> </strong>Antigo</strong> - {{subpedido.sala_especifica}}</span>
+                            {%else%}
+                            <span>{{subpedido.sala_especifica}}</span>
+                            {% endif%}
+                        </th>
+
+                        <th style="font-weight: normal;">
+                            {% if subpedido.sala_especifica != '' %}
+                            <span>Sem especificaçao</span>
+                            {%elif subpedido.action == 3 %}
+                            <span></strong>Novo</strong> - {{subpedido.editar_instituicao}}  <br> </strong>Antigo</strong> - {{subpedido.instituicao_name}}</span>
+                            {%else%}
+                            <span>{{subpedido.instituicao}}</span>
+                            {% endif%}
+                        </th>
+
+                        
+                        <th style="font-weight: normal;">
+                            {% if subpedido.sala_especifica != '' %}
+                            <span>Sem especificaçao</span>
+                            {%elif subpedido.action == 3 %}
+                            <span></strong>Novo</strong> - {{subpedido.editar_edificio}}  <br> </strong>Antigo</strong> - {{subpedido.edificio}}</span>
+                            {%else%}
+                            <span>{{subpedido.edificio}}</span>
+                            {% endif%}
+                        </th>
+
+
+
+                        <th style="font-weight: normal;">
+                            {% if subpedido.sala_especifica != '' %}
+                            <span>Sem especificaçao</span>
+                            {%elif subpedido.action == 3 %}
+                            <span></strong>Novo</strong> - {{subpedido.editar_tipo_sala}}  <br> </strong>Antigo</strong> - {{subpedido.tipo_sala}}</span>
+                            {%else%}
+                            <span>{{subpedido.tipo_sala}}</span>
+                            {% endif%}
+                        </th>
+
+                        
+                        <th style="font-weight: normal;">
+                            {% if subpedido.sala_especifica != '' %}
+                            <span>Sem especificaçao</span>
+                            {%elif subpedido.action == 3 %}
+                            <span></strong>Novo</strong> - {{subpedido.editar_tipodeaula}}  <br> </strong>Antigo</strong> - {{subpedido.tipodeaula}}</span>
+                            {%else%}
+                            <span>{{subpedido.tipodeaula}}</span>
+                            {% endif%}
+                        </th>
+
+                        <th style="font-weight: normal;">
+                            {% if subpedido.numero_alunos == 0 %}
+                            <span>Sem especificaçao</span>
+                            {%elif subpedido.action == 3 %}
+                            <span></strong>Novo</strong> - {{subpedido.editar_numero_alunos}}  <br> </strong>Antigo</strong> - {{subpedido.numero_alunos}}</span>
+                            {%else%}
+                            <span>{{subpedido.numero_alunos}}</span>
+                            {% endif%}
+                        </th>
+
+                        <th style="font-weight: normal;">
+                            {% if subpedido.action == 3 %}
+                            <span></strong>Novo</strong> - {{subpedido.editar_inicio}} <br> </strong>Antigo</strong> -  {{subpedido.inicio}}</span>
+                            {%else%}
+                            <span>{{subpedido.inicio}}</span>
+                            {% endif%}
+                        </th>
+
+                        
+                        <th style="font-weight: normal;">
+                            {% if subpedido.action == 3 %}
+                            <span></strong>Novo</strong> - {{subpedido.editar_fim}} <br> </strong>Antigo</strong> -  {{subpedido.fim}}</span>
+                            {%else%}
+                            <span>{{subpedido.fim}}</span>
+                            {% endif%}
+                        </th>
+                    
+                    </tr>
+                    {% endfor %}
+                
+                </tbody>
+            </table>
+
+
+
+
+            <div class="columns">
+                <div class="column">
+                  <div class="field">
+                    <label class="label">Comentários: </label>
+                    <div class="control is-clearfix">{{pedido_sala.comentarios}}</div>
+                  </div>
+                </div>
+              </div>
+
+        
+            <div style="margin-top:8%;text-align:center;position:center;">
+                <button type="button" value="Voltar" class="button is-outlined" style="margin-right:5%" onclick="history.back();" >Voltar</button>
+                           
+            </div>
+
+{% endblock content %}
+
+
+{% block scripts %}
+<script>
+  var app = new Vue({
+    delimiters: ["[[", "]]"],
+    el: '#consultar-pedido',
+    data(){
+        return{
+            Teste : ""
+        }
+    },
+    methods: {
+        
+    },
+});
+</script>
+  
+{% endblock scripts %}

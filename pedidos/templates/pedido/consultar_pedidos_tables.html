@@ -1,0 +1,33 @@
+{% extends 'bulma_table_details.html' %}
+
+
+{% block details_content %}
+
+<table>
+    <tbody>
+        <tr>
+            <td><strong>Assunto:</strong></td>
+            <td>{{row.record.assunto}}</td>
+        </tr>
+        <tr>
+            <td><strong>Informacões:</strong></td>
+            <td>{{row.record.informacoes}}</td>
+        </tr>
+        <tr>
+            <td><strong>Estado:</strong></td>
+            <td>{{row.record.estado_0.estado}}</td>
+            <td><strong>Tipo:</strong></td>
+            <td>{{row.record.tipo.tipo}}</td>
+        </tr>
+        <tr>
+            <td><strong>Data Alvo:</strong></td>
+            <td>{{row.record.data_de_alvo}}</td>
+        </tr>
+        <tr>
+            <td><strong>Data de Submissão:</strong></td>
+            <td>{{row.record.data_de_submissao}}</td>
+        </tr>
+    </tbody>
+</table>
+
+{% endblock details_content %}

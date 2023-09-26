@@ -1,0 +1,202 @@
+{% extends 'app.html' %}
+
+{% load static %}
+{% block title %}- Criar Utilizador{% endblock title %}
+<!--
+    Funcionario terá id = 1
+
+-->
+{% block content %}
+<div style="padding: 3rem 2vw 1rem;">
+
+    <div class="steps is-success">
+        <div class="step-item is-completed is-success">
+            <div class="step-marker">
+                <span class="icon">
+                    <i class="mdi mdi-account"></i>
+                </span>
+            </div>
+            <div class="step-details">
+                <p class="step-title">Escolher Perfil</p>
+            </div>
+        </div>
+        <div class="step-item is-completed is-success">
+            <div class="step-marker">
+                <span class="icon">
+                    <i class="mdi mdi-circle-edit-outline mdi-24px"></i>
+                </span>
+            </div>
+            <div class="step-details">
+                <p class="step-title">Preencher Campos</p>
+            </div>
+        </div>
+
+        <div class="step-item is-success">
+            <div class="step-marker">
+                <span class="icon">
+                    <i class="mdi mdi-check"></i>
+                </span>
+            </div>
+            <div class="step-details">
+                <p class="step-title">Concluir</p>
+            </div>
+        </div>
+    </div>
+
+{% if msg %}
+    <div  style="margin-left:30%;margin-right:30%;">
+        <div style="margin-top:2%;text-align: center;position:center;">
+        <article class="message is-danger">
+            <div class="message-body">
+            <p style="text-align: center;">
+                {% if form.non_field_errors %}
+                    {% for error in form.non_field_errors %}
+                        <p style="color: #ff0000; text-align:center">{{error}}</p>
+                    {% endfor %}
+                {% else %} 
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <p style="color: #ff0000;">{{ error }}</p>
+                    {% endfor %}
+                {% endfor %} 
+                {%endif%}
+            </p>
+            </div>
+        </article>  
+        </div>
+    </div>
+{% endif %} 
+<form  method="post">
+    {% csrf_token %}
+
+    <div style="padding: 1rem 2vw 0px;">
+            <hr>
+                <h2 class="title has-text-grey is-uppercase" style="font-size: 0.9rem;">
+                    {{perfil}} 
+                </h2>
+            <div class="columns">
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Nome Próprio</label>
+                        <div class="control is-clearfix">
+                            <input name="first_name" class="input" id="id_first_name" value="{{form.first_name.value|default_if_none:"" }}" maxlength="255">
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Apelido</label>
+                        <div class="control is-clearfix">
+                            <input name="last_name"class="input" id="id_last_name" value="{{form.last_name.value|default_if_none:"" }}" type="text" maxlength="255">
+                        </div>
+                        </div>
+                    </div>
+                <hr>
+            </div>
+
+            <div class="columns">
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Username</label>
+                            <div class="control is-clearfix">
+                                <input  name="username" value="{{form.username.value|default_if_none:""}}" class="input"id="id_username"  type="text" maxlength="255"> 
+                            </div>
+                    </div>
+                </div>
+                
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Email</label>
+                            <div class="control is-clearfix">
+                                <input class="input" name="email"id="id_email" value="{{form.email.value|default_if_none:""}}" type="text" maxlength="255"> <!----> <!----> <!---->
+                            </div>
+                    </div>
+                </div>
+            
+
+            <hr>
+            </div>
+            
+            <div class="columns">
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Palavra-passe</label>
+                            <div class="control is-clearfix">
+                                <input name="password1" id="id_password1" class="input" type="password" maxlength="255"> 
+                            </div>
+                    </div>
+                </div>
+                
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Confirmação da Palavra-passe</label>
+                            <div class="control is-clearfix">
+                                <input name="password2" id="id_password2" class="input" type="password" maxlength="255"> 
+                            </div>
+                    </div>
+                </div>
+            
+            <hr>
+            </div>
+        </div> 
+
+        {% if registo == 2 %}
+        <div class="columns">
+            <div class="column">
+                <div class="field">
+                    <label class="label">Faculdade</label>
+                        <div class="control is-clearfix">
+                            <div class="field">
+                                <div class="control is-expanded">
+                                    <span class="select is-fullwidth is-empty">
+                                        {{form.faculdadeid}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+
+            <div class="column">
+                <div class="field">
+                    <label class="label">Departamento</label>
+                        <div class="control is-clearfix">
+                            <div class="field">
+                                <div class="control is-expanded">
+                                    <span class="select is-fullwidth is-empty">
+                                        {{form.departamentoid}}
+                                    </span> 
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+
+            <div class="column">
+                <div class="field">
+                    <label class="label">Gabinete</label>
+                        <div class="control is-clearfix">
+                            <span class="select is-fullwidth is-empty">
+                                {{form.gabineteid}}
+                            </span>
+                        </div>
+                </div>
+            </div>
+            <hr>
+        </div>
+        {%endif%}
+
+
+
+
+        <div style="margin-top:2%;text-align:center;position:center;">
+            <button type="button" value="Voltar" class="button is-outlined" style="margin-right:5%" onclick="history.back();" >Voltar</button>
+            <button type="submit" class="button is-success is-outlined">
+                <span>Confirmar</span>
+            </button>
+        </div>
+</form>
+</div>
+    
+
+{% endblock content %}

@@ -1,0 +1,24 @@
+{% extends 'app.html' %}
+
+{% load static %}
+
+{% block title %}- Eliminar Pedido Horario{% endblock title %}
+
+
+
+{% block content %}
+  <div class="container mt-5">
+
+    <form method="POST">
+      {% csrf_token %}
+      <input type="hidden" name="pedido_id" value="{{ pedido_id }}">
+      <div style="margin-top:8%;text-align:center;position:center;">
+        <h2 class="title has-text-grey is-uppercase" style="font-size: 2.0rem;">
+            Tem certeza de que deseja associar-se este pedido?
+        </h2>
+        <input type="submit" name="cancelar" value="Não" class="button is-outlined" style="margin-right:5%">
+        <input type="submit" name="confirmar" value="Sim" class="button is-success is-outlined">
+      </div>
+    </form>
+  </div>
+{% endblock content %}

@@ -1,0 +1,100 @@
+{% extends 'app.html' %} {% load static %} {% block title %}- Consultar
+Pedidos{% endblock title %} {% block content %}
+<div style="padding: 1rem 2vw 0px">
+  <hr />
+  <h2 class="title has-text-grey is-uppercase" style="font-size: 2rem">
+    Consultar de Pedido UC:
+  </h2>
+  <div class="columns">
+    <div class="column">
+      <div class="field">
+        <label class="label">Assunto: </label>
+        <div class="control is-clearfix">{{pedido_uc.assunto}}</div>
+      </div>
+    </div>
+  </div>
+  <div class="columns">
+    <div class="column">
+      <div class="field">
+        <label class="label">Data alvo: </label>
+        <div class="control is-clearfix">{{pedido_uc.data_de_alvo}}</div>
+      </div>
+    </div>
+  </div>
+  <div class="columns">
+    <div class="column">
+      <div class="field">
+        <label class="label">Informações: </label>
+        <div class="control is-clearfix">{{pedido_uc.informacoes}}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div>&nbsp;</div>
+
+            {% if pedido_uc.identificador_id.id == 2 %}
+            <a  v-show="showFileBox === 2"   class="button is-success" href="{{file_url}}">Descarregar Ficheiro do Pedido</a>
+            
+            {% else %}
+            <table class="table" style="width: 100%; background-color: rgb(51, 151, 131);">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Ação</th>
+                  <th>Unidade Curricular</th>
+                  <th>Turma</th>
+                  <th>Descrição</th>
+                </tr>
+              </thead>
+                <tbody style="background-color: #ccc;">
+                    {% for subpedido in pedido_uc.subpedidos %}
+                    <tr>
+                    <th></th>
+                  <th style="font-weight: normal">{{subpedido.acao}}</th>
+                  <th style="font-weight: normal">{{subpedido.uc}}</th>
+                  <th style="font-weight: normal">{{subpedido.turma}}</th>
+                  <th style="font-weight: normal">{{subpedido.descricao}}</th>
+                </tr>  
+                  {% endfor %}
+                
+                </tbody>
+                
+              </table>
+            {% endif%}
+  <div>&nbsp;</div>
+<div class="columns">
+  <div class="column">
+    <div class="field">
+      <label class="label">Comentários: </label>
+      <div class="control is-clearfix">{{pedido_uc.comentarios}}</div>
+    </div>
+  </div>
+</div>
+<div style="margin-top: 8%; text-align: center; position: center">
+  <button
+    type="button"
+    value="Voltar"
+    class="button is-outlined"
+    style="margin-right: 5%"
+    onclick="history.back();"
+  >
+    Voltar
+  </button>
+</div>
+
+{% endblock content %} {% block scripts %}
+<script>
+  var app = new Vue({
+    delimiters: ["[[", "]]"],
+    el: "#consultar-pedido",
+    data() {
+      return {
+        Teste: "",
+      };
+    },
+    methods: {},
+  });
+</script>
+
+{% endblock scripts %}

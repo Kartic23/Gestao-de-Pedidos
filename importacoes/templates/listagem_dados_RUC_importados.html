@@ -1,0 +1,107 @@
+{% extends 'app.html' %}
+
+{% load static %}
+
+{% block title %}- Importar{% endblock title %}
+
+{% block content %}
+
+<div style="padding: 1rem 2vw 0px;">
+  <hr>
+  <h2 class="title has-text-grey is-uppercase" style="font-size: 2.0rem;">
+      Informação sobre dados importados do ficheiro Excel de RUC: 
+  </h2>
+
+    <h2 class="title has-text-grey is-success" style="font-size: 1.5rem;">
+   Disciplinas:
+    </h2>
+    <table class="table" style="width: 100%; ">
+        <thead style="background-color: rgb(110, 248, 221);">
+            <tr>
+              <th style="text-align: center">Ano Letivo</th>
+              <th style="text-align: center">Nome do Docente</th>
+              <th style="text-align: center">Regência</th>
+              <th></th>
+            </tr>
+        </thead>
+        <tbody style="background-color: rgb(218, 226, 226);">
+            {% for regencia in Ucs %}
+            <tr>
+                <th style="text-align: center; font-weight: normal;">{{regencia.ano_letivo}}</th>
+                <th style="text-align: center; font-weight: normal;">{{regencia.nome_docente}}</th>
+                <th style="text-align: center; font-weight: normal;">{{regencia.uc}}</th>
+                {% if regencia.new_Regencia == 'S' %}
+                         <th style="text-align: center; font-weight: normal; color:red">Esta regência já está na BD</th>
+                {% else %}
+                         <th></th>
+                {% endif%}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <h2 class="title has-text-grey is-success" style="font-size: 1.5rem;">
+        Curso:
+         </h2>
+         <table class="table" style="width: 100%; ">
+             <thead style="background-color: rgb(110, 248, 221);">
+                 <tr>
+                   <th style="text-align: center">Ano Letivo</th>
+                   <th style="text-align: center">Nome do Docente</th>
+                   <th style="text-align: center">Regência</th>
+                   <th></th>
+                 </tr>
+             </thead>
+             <tbody style="background-color: rgb(218, 226, 226);">
+                 {% for regencia in Curso %}
+                 <tr>
+                     <th style="text-align: center; font-weight: normal;">{{regencia.ano_letivo}}</th>
+                     <th style="text-align: center; font-weight: normal;">{{regencia.nome_docente}}</th>
+                     <th style="text-align: center; font-weight: normal;">{{regencia.curso}}</th>
+                     {% if regencia.new_Regencia == 'S' %}
+                         <th style="text-align: center; font-weight: normal; color:red">Esta regência já está na BD</th>
+                    {% else %}
+                    <th></th>
+                    {% endif%}
+                 </tr>
+                 {% endfor %}
+             </tbody>
+         </table>
+
+         <h2 class="title has-text-grey is-success" style="font-size: 1.5rem;">
+            Departamento:
+             </h2>
+             <table class="table" style="width: 100%; ">
+                 <thead style="background-color: rgb(110, 248, 221);">
+                     <tr>
+                       <th style="text-align: center">Ano Letivo</th>
+                       <th style="text-align: center">Nome do Docente</th>
+                       <th style="text-align: center">Regência</th>
+                       <th></th>
+                     </tr>
+                 </thead>
+                 <tbody style="background-color: rgb(218, 226, 226);">
+                     {% for regencia in Deps %}
+                     <tr>
+                         <th style="text-align: center; font-weight: normal;">{{regencia.ano_letivo}}</th>
+                         <th style="text-align: center; font-weight: normal;">{{regencia.nome_docente}}</th>
+                         <th style="text-align: center; font-weight: normal;">{{regencia.dep}}</th>
+                         {% if regencia.new_Regencia == 'S' %}
+                         <th style="text-align: center; font-weight: normal; color:red">Esta regência já está na BD</th>
+                         {% else %}
+                         <th></th>
+                         {% endif%}
+                     </tr>
+                     {% endfor %}
+                 </tbody>
+             </table>
+
+</div>
+
+
+{% endblock content %}
+
+{% block scripts %}
+
+  
+{% endblock scripts %}

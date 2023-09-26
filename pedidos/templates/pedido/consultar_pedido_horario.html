@@ -1,0 +1,114 @@
+{% extends 'app.html' %}
+
+{% load static %}
+
+{% block title %}- Consultar Pedidos{% endblock title %}
+
+{% block content %}
+<div style="padding: 1rem 2vw 0px;">
+  <hr>
+  <h2 class="title has-text-grey is-uppercase" style="font-size: 2.0rem;">
+      Consultar de Pedido Horário:
+  </h2>
+  <div class="columns">
+      <div class="column">
+          <div class="field">
+              <label class="label">Assunto: </label>
+              <div class="control is-clearfix">
+                  {{pedido_horario.assunto}}
+              </div>
+          </div>
+      </div>
+  </div>
+  <div class="columns">
+      <div class="column">
+          <div class="field">
+              <label class="label">Data alvo: </label>
+              <div class="control is-clearfix">
+                  {{pedido_horario.data_de_alvo}}
+              </div>
+          </div>
+      </div>
+  </div>
+  <div class="columns">
+      <div class="column">
+          <div class="field">
+              <label class="label">Informações: </label>
+              <div class="control is-clearfix">
+                  {{pedido_horario.informacoes}}
+              </div>
+          </div>
+      </div>
+  </div>
+</div> 
+
+<div>&nbsp;</div>
+
+            {% if pedido_horario.identificador_id.id == 2 %}
+            <a  v-show="showFileBox === 2"   class="button is-success" href="{{file_url}}">Descarregar Ficheiro do Pedido</a>
+            
+            {% else %}
+            <table class="table" style="width: 100%; background-color: rgb(51, 151, 131);">
+              <thead>
+                  <tr>
+                    <th></th>
+                    <th>Ação</th>
+                    <th>Data</th>
+                    <th>Hora Inicial</th>
+                    <th>Hora Final</th>
+                    <th>Descrição</th>
+                  </tr>
+                </thead>
+                <tbody style="background-color: #ccc;">
+                    {% for subpedido in pedido_horario.subpedidos %}
+                    <tr>
+                      <th></th>
+                      <th style="font-weight: normal;">{{subpedido.acoes}}</th>
+                      <th style="font-weight: normal;">{{subpedido.date_h}}</th>
+                      <th style="font-weight: normal;">{{subpedido.timeinicial}}</th>
+                      <th style="font-weight: normal;">{{subpedido.timefinal}}</th>
+                      <th style="font-weight: normal;">{{subpedido.descricao}}</th>
+                    </tr>
+                    {% endfor %}
+                
+                </tbody>
+                
+              </table>
+            {% endif%}
+  <div>&nbsp;</div>
+
+<div class="columns">
+  <div class="column">
+    <div class="field">
+      <label class="label">Comentários: </label>
+      <div class="control is-clearfix">{{pedido_horario.comentarios}}</div>
+    </div>
+  </div>
+</div>
+
+
+
+<div style="margin-top:8%;text-align:center;position:center;">
+  <button type="button" value="Voltar" class="button is-outlined" style="margin-right:5%" onclick="history.back();" >Voltar</button>
+             
+</div>
+
+{% endblock content %}
+
+{% block scripts %}
+<script>
+  var app = new Vue({
+    delimiters: ["[[", "]]"],
+    el: '#consultar-pedido',
+    data(){
+        return{
+            Teste : ""
+        }
+    },
+    methods: {
+        
+    },
+});
+</script>
+  
+{% endblock scripts %}

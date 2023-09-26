@@ -1,0 +1,76 @@
+{% extends 'app.html' %}
+
+{% load static %}
+
+{% block title %}- Importar{% endblock title %}
+
+{% block content %}
+<div style="padding: 1rem 2vw 0px;">
+  <hr>
+  <h2 class="title has-text-grey is-uppercase" style="font-size: 2.0rem;">
+      Selecione o tipo de Importação:
+  </h2>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+    <div class="columns">
+        <div class="column">
+            <div class="field">
+                <div class="control is-clearfix">
+                    <a href="{% url 'importacoes:importar-sala' %}" >
+                        <button class="button is-outlined" style="width: 100%;" >
+                                <span>Salas</span>
+                        </button> 
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="column">
+            <div class="field">
+                <div class="control is-clearfix">
+                    <a href="{% url 'importacoes:importar-docente' %}" >
+                        <button class="button is-outlined" style="width: 100%;" >
+                                <span>Docentes</span>
+                            
+                        </button> 
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>&nbsp;</div>
+    <div>&nbsp;</div>
+    <div>&nbsp;</div>
+
+    <div class="columns">
+        <div class="column">
+            <div class="field">
+                <div class="control is-clearfix">
+                    <a href="{% url 'importacoes:importar-dsd' %}">
+                        <button class="button is-outlined" style="width: 100%;" >
+                                <span>Distribuição de serviços de Docentes</span>
+                        </button> 
+                    </a>           
+                </div>
+            </div>
+        </div>
+        <div class="column">
+            <div class="field">
+                <div class="control is-clearfix">
+                    <a href="{% url 'importacoes:importar-ruc' %}" >
+                        <button class="button is-outlined" style="width: 100%;" >
+                                <span>Responsável por Unidade Curricular</span>
+                        </button>  
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block scripts %}
+
+  
+{% endblock scripts %}

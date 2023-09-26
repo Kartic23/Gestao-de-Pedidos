@@ -1,0 +1,263 @@
+{% extends 'app.html' %}
+
+{% load static %}
+
+{% block title %}- Editar Pedido Outros{% endblock title %}
+
+
+
+{% block content %}
+
+<div id="editar-pedido"   >
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div style="padding: 1rem 2vw 0px;">
+            <hr>
+                <h2 class="title has-text-grey is-uppercase" style="font-size: 2.0rem;">
+                    Editar Pedido Outros
+                </h2>
+                {% if msg %}
+                    <div  style="margin-left:30%;margin-right:30%; margin-top:0%">
+                        <div style="margin-top:2%;text-align: center;position:center;">
+                            <article class="message is-danger">
+                                <div class="message-body">
+                                    <p style="text-align: center;">
+                                        {{erros}}
+                                    </p>
+                                </div>
+                            </article>
+                        </div>
+                    </div> 
+                {% endif %}
+            <div class="columns">
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Assunto: </label>
+                        <div class="control is-clearfix">
+                            <input type="text" id="assunto" name="assunto" value="{{form.assunto.value|default_if_none:""}}" style=" font-size: 1rem;  padding: 0.5rem;  border-radius: 4px;  border: 1px solid #ccc;  width: 100%; " required />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="columns">
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Data alvo: </label>
+                        <div class="control is-clearfix">
+                            <input name="data" value="{{form.data.value|default_if_none:""}}" type="date" class="input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="columns">
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Informações: </label>
+                        <div class="control is-clearfix">
+                            <textarea
+                            id="informacoes"
+                            name="informacoes"
+                            style="
+                              font-size: 1rem;
+                              padding: 0.5rem;
+                              border-radius: 4px;
+                              border: 1px solid #ccc;
+                              width: 100%;
+                              min-height: 10rem;
+                            "
+                            required
+                          >{{form.informacoes.value|default_if_none:""}}</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> 
+        <div>&nbsp;</div>
+        Seleciona uma das opções: 
+        <select name="selected_option"  v-model="selectedOption" class="label" style="width:100%" required>
+            <option> </option>
+            <option name="2" value="2">Enviar ficheiro</option>
+            <option name="1" value="1">Preencher tabela</option>
+        </select>
+        <div>&nbsp;</div>
+        <div v-if="selectedOption === '2'" >
+            {% if file_url %}
+                <a  v-show="showFileBox === 2"   class="button" href="{{file_url}}">Ficheiro do Pedido</a>
+                <span v-show="showFileBox === 2"  v-on:click="change() "class="button is-danger" >Eliminar</span>
+            {% endif %}
+            <input name="arquivo" v-show="showFileBox === 1" type="file" class="button" style="width: 100%" v-required >
+
+        </div>
+
+        <table class="table" v-show="selectedOption === '1'" style="width: 100%; background-color: rgb(51, 151, 131);">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Assunto</th>
+                <th>Descrição</th>
+              </tr>
+            </thead>
+            <tbody style="background-color: #ccc;">
+                <tr v-for="(subpedido, index) in subpedidos" :key="index">
+                    <th>
+                        <button type="button" class="button is-danger is-small" v-on:click="removeRow(index)">Remover</button>
+                    </th>
+                    <th style="font-weight: normal;">[[subpedido.assunto]]</th>
+                    <th style="font-weight: normal;">[[subpedido.descricao]]</th>
+                </tr>
+            </tbody>
+            
+        </table>
+
+        <add-subpedido v-show="selectedOption === '1'" :subpedidos="subpedidos"></add-subpedido>
+
+    
+        <input type="hidden" name="subpedidos" v-bind:value="JSON.stringify(subpedidos)">
+        
+
+        <div style="margin-top:8%;text-align:center;position:center;">
+            <button type="button" value="Voltar" class="button is-outlined" style="margin-right:5%" onclick="history.back();" >Voltar</button>
+            <button type="submit" class="button is-success is-outlined">
+                <span>Confirmar</span>
+            </button>
+        </div>
+    </form>
+
+</div>
+
+{% endblock content %}
+
+
+{% block scripts %}
+<script>
+    axios.defaults.xsrfCookieName = 'csrftoken';
+    axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+    
+    Vue.component('add-subpedido', {
+        delimiters: ["[[", "]]"],
+        props: ['subpedidos'],
+        template: ` 
+        <div>
+            <div>                 
+                <article v-if="valueError" class="message is-danger">
+                    <div class="message-body">
+                        <p style="text-align: center;">
+                            O assunto e a descrição deve ter pelo menos 5 caracteres
+                        </p>
+                    </div>
+                </article>
+            
+                <table class="table" style="width: 100%;">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <input type="text" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 100%;" placeholder="Assunto" v-model="subassunto" >
+                            </td>
+                            <td>
+                                <textarea v-model="subdescricao" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 100%; min-height: 1rem;" placeholder="Descrição"></textarea>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button style="margin-left: 50%;" type="button" class="button is-success" v-on:click="addRow()">Adicionar</button>                           
+            </div>
+        
+        </div>
+        `,
+        data() {
+            return{
+                error: false,
+                subassunto: "",
+                subdescricao: "",
+            };
+        },
+        computed: {
+            valueError(){
+                return this.error;
+            }
+        },
+        methods: {
+            clearInput(){
+                this.subassunto = "";
+                this.subdescricao = "";
+            },
+            hasError() {
+                return (this.subassunto.length < 5 || this.subdescricao.length < 5);
+            },
+            addRow(){
+                if(!this.hasError()){
+                    const novoSubpedido = {
+                        assunto: this.subassunto,
+                        descricao: this.subdescricao
+                    };
+                    this.subpedidos.push(novoSubpedido);
+                    this.clearInput();
+                    this.error = false;
+                    
+                } 
+                else{
+                    this.error = true;
+                } 
+            },    
+        },
+    });
+    
+    
+    
+    var app = new Vue({
+        delimiters: ["[[", "]]"],
+        el: '#editar-pedido',
+        data(){
+            return{
+                subpedidos: [],
+                selectedOption: '',
+                showFileBox: '',
+            }
+        },
+        mounted(){
+            var a = "{{pedidos}}";
+            this.getSubPedidos(a);
+            var b = "{{tipo}}";
+            this.setSelectOption(b);
+            this.show();
+        },
+        methods: {
+            removeRow(index){
+                this.subpedidos.splice(index, 1);
+            },
+            setSelectOption(a){
+                this.selectedOption = a
+            },
+            show(){
+                if (this.selectedOption == 1)
+                    this.showFileBox = 1
+                else    
+                    this.showFileBox = 2
+            },
+            getSubPedidos(subpedidos){
+                if(subpedidos.length > 0){
+                    let arrayValores = subpedidos.split("&#x27;");
+                    for (let i = 3; i < arrayValores.length; i += 8){
+                        const novoSubpedido = {
+                            assunto: arrayValores[i],
+                            descricao: arrayValores[i+4]
+                        };
+                        this.subpedidos.push(novoSubpedido);
+                    }
+                }
+               
+            }
+            
+        },
+        computed: {
+            change(){
+                this.showFileBox = 1
+            }
+        }
+    });
+        
+    </script>
+{% endblock scripts %}
+    

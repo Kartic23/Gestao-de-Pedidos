@@ -1,0 +1,36 @@
+{% extends 'app.html' %}
+
+{% load static %}
+
+{% block title %}- Importar{% endblock title %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+    {{ form.as_p }}
+    {% csrf_token %}
+<div style="padding: 1rem 2vw 0px;">
+  <hr>
+  <h2 class="title has-text-grey is-uppercase" style="font-size: 2.0rem;">
+      Importação de Docentes: 
+  </h2>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+    
+  <input type="file" name="arquivo" class="button" style="width: 100%" >
+  <div style="margin-top:8%;text-align:center;position:center;">
+    <button type="button" value="Voltar" class="button is-outlined" style="margin-right:5%" onclick="history.back();" >Voltar</button>
+    <button name="confirmar" value="confirmado" class="button is-success is-outlined" >
+        <span>Confirmar</span>
+    </button>            
+</div>
+
+</div>
+</form>
+
+{% endblock content %}
+
+{% block scripts %}
+
+  
+{% endblock scripts %}

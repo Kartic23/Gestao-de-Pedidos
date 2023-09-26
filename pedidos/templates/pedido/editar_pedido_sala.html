@@ -1,0 +1,1328 @@
+{% extends 'app.html' %}
+
+{% load static %}
+
+{% block title %}- Editar Pedido Sala{% endblock title %}
+
+
+
+{% block content %}
+<div id="Editar-pedido" >
+    <form method="post">
+        {% csrf_token %}
+        <div style="padding: 1rem 2vw 0px;">
+                <hr>
+                    <h2 class="title has-text-grey is-uppercase" style="font-size: 2.0rem;">
+                        Editar Pedido Sala 
+                    </h2>
+                    {% if msg %}
+                        <div  style="margin-left:30%;margin-right:30%; margin-top:0%">
+                            <div style="margin-top:2%;text-align: center;position:center;">
+                                <article class="message is-danger">
+                                    <div class="message-body">
+                                        <p style="text-align: center;">
+                                            {{erros}}
+                                        </p>
+                                    </div>
+                                </article>
+                            </div>
+                        </div> 
+                    {% endif %}
+                <div class="columns">
+                    <div class="column">
+                        <div class="field">
+                            <label class="label">Assunto: </label>
+                            <div class="control is-clearfix">
+                                <input type="text" id="assunto" name="assunto" value="{{form.assunto.value|default_if_none:""}}" style=" font-size: 1rem;  padding: 0.5rem;  border-radius: 4px;  border: 1px solid #ccc;  width: 100%; " required />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column">
+                        <div class="field">
+                            <label class="label">Data alvo: </label>
+                            <div class="control is-clearfix">
+                                <input name="data" value="{{form.data.value|default_if_none:""}}" type="date" class="input">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column">
+                        <div class="field">
+                            <label class="label">Informações: </label>
+                            <div class="control is-clearfix">
+                                <textarea
+                                id="informacoes"
+                                name="informacoes"
+                                style="
+                                font-size: 1rem;
+                                padding: 0.5rem;
+                                border-radius: 4px;
+                                border: 1px solid #ccc;
+                                width: 100%;
+                                min-height: 10rem;
+                                "
+                                required
+                            >{{form.informacoes.value|default_if_none:""}}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                
+            </div> 
+
+            <div>&nbsp;</div>
+            <table class="table" style="width: 100%; background-color: rgb(51, 151, 131);">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Ação</th>
+                        <th>Descricao</th>
+                        <th>Sala especifica</th>
+                        <th>Instituição</th>
+                        <th>Edificio</th>
+                        <th>Tipo de sala</th>
+                        <th>Tipo de aula</th>
+                        <th>Numero de alunos</th>
+                        <th>Inicio</th>
+                        <th>Fim</th>
+                    </tr>
+                    
+                </thead>
+                <tbody style="background-color: #c7c3c3;">
+                    <tr v-for="(subpedido, index) in subpedidos" :key="index">
+                    
+                        <th>
+                            <button type="button" class="button is-danger is-small" v-on:click="removeRow(index)">Remover</button>
+                        </th>
+                        
+                        <th style="font-weight: normal;">
+                            <span v-if="subpedido.action === '1'">Criar</span>
+                            <span v-if="subpedido.action === '2'">Eliminar</span>
+                            <span v-if="subpedido.action === '3'">Editar</span>
+                        </th>
+
+                        <th style="font-weight: normal;">
+                            <span v-if="subpedido.action === '3'"> </strong>Novo</strong> -[[subpedido.editar_descricao]] <br>  </strong>Antigo</strong> - [[subpedido.descricao]]</span>
+                            <span v-else>[[subpedido.descricao]]</span>
+                        </th>
+                        
+                        <th style="font-weight: normal;">
+                            <span v-if="subpedido.sala_especifica === ''">Sem especificaçao</span>
+                            <span v-else-if="subpedido.action === '3'"></strong>Novo</strong> - [[subpedido.editar_Salaespecifica_name]] <br> </strong>Antigo</strong> - [[subpedido.Salaespecifica_name]]</span>
+                            <span v-else>[[subpedido.Salaespecifica_name]]</span>
+                        </th>
+                        
+                        <th style="font-weight: normal;">
+                            <span v-if="subpedido.sala_especifica != ''">Sem especificaçao</span>
+                            <span v-else-if="subpedido.action === '3'"></strong>Novo</strong> - [[subpedido.editar_instituicao_name]]  <br> </strong>Antigo</strong> - [[subpedido.instituicao_name]]</span>
+                            <span v-else>[[subpedido.instituicao_name]]</span>
+                        </th>
+
+                        <th style="font-weight: normal;">
+                            <span v-if="subpedido.sala_especifica != ''">Sem especificaçao</span>
+                            <span v-else-if=" subpedido.action === '3'"></strong>Novo</strong> - [[subpedido.editar_edificio_name]]  <br> </strong>Antigo</strong> - [[subpedido.edificio_name]]</span>
+                            <span v-else>[[subpedido.edificio_name]]</span>
+                        </th>
+
+                        <th style="font-weight: normal;">
+                            <span v-if="subpedido.sala_especifica != ''">Sem especificaçao</span>
+                            <span v-else-if=" subpedido.action === '3'"></strong>Novo</strong> - [[subpedido.editar_tipoSala_name]]   <br> </strong>Antigo</strong> - [[subpedido.tipoSala_name]]</span>
+                            <span v-else>[[subpedido.tipoSala_name]]</span>
+                        </th>
+
+                        <th style="font-weight: normal;">
+                            <span v-if="subpedido.sala_especifica != ''">Sem especificaçao</span>
+                            <span v-else-if=" subpedido.action === '3'"></strong>Novo</strong> - [[subpedido.editar_tipodeaula_name]]  <br> </strong>Antigo</strong> - [[subpedido.tipodeaula_name]]</span>
+                            <span v-else>[[subpedido.tipodeaula_name]]</span>
+                        </th>
+
+                        <th style="font-weight: normal;">
+                            <span v-if="subpedido.numero_alunos === 0">Sem especificaçao</span>
+                            <span v-else-if=" subpedido.action === '3'"></strong>Novo</strong> - [[subpedido.editar_numero_alunos]] <br> </strong>Antigo</strong> - [[subpedido.numero_alunos]]</span>
+                            <span v-else>[[subpedido.numero_alunos]]</span>
+                        </th>
+
+                        <th style="font-weight: normal;">
+                            <span v-if="subpedido.action === '3'"> </strong>Novo</strong> - [[subpedido.editar_inicio]] <br> </strong>Antigo</strong> -  [[subpedido.inicio]]</span>
+                            <span v-else>[[subpedido.inicio]]</span>
+                        </th>
+                        
+                        <th style="font-weight: normal;">
+                            <span v-if="subpedido.action === '3'"> </strong>Novo</strong> - [[subpedido.editar_fim]] <br> </strong>Antigo</strong> - [[subpedido.fim]]</span>
+                            <span v-else>[[subpedido.fim]]</span>
+                        </th>
+                    
+                    </tr>
+                </tbody>
+            </table>
+        
+
+            <add-subpedido :subpedidos="subpedidos"></add-subpedido>
+
+        
+            <input type="hidden" name="subpedidos" v-bind:value="JSON.stringify(subpedidos)">
+            <div style="margin-top:8%;text-align:center;position:center;">
+                <button type="button" value="Voltar" class="button is-outlined" style="margin-right:5%" onclick="history.back();" >Voltar</button>
+                <button name="confirmar" value="confirmado" class="button is-success is-outlined" v-on:click="confirmar()">
+                    <span>Confirmar</span>
+                </button>            
+            </div>
+        </form>
+
+</div>
+
+
+{% endblock content %}
+
+
+{% block scripts %}
+<script>
+
+axios.defaults.xsrfCookieName = 'csrftoken';
+axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+
+Vue.component('add-subpedido', {
+    delimiters: ["[[", "]]"],
+    props: ['subpedidos','salas'],
+    template: ` 
+    <div>
+        <div>                
+            <article v-if="valueError" class="message is-danger">
+                <div class="message-body">
+                    <p style="text-align: center;">
+                        A descrição deve ter pelo menos 5 caracteres , a data final tem que ser superior a inicial e ambas têm de ser superiores ao dia de hoje e todos os campos devem ser preenchidos
+                    </p>
+                </div>
+            </article>
+
+
+            <label for="tipo-dropdown" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 100%;">Ação</label>
+            <select name="action"  v-model="action" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 7%;">
+                <option value="0"></option>        
+                <option value="1">Criar</option>
+                <option value="2">Eliminar</option>
+                <option value="3">Editar</option>
+            </select>
+            <br>
+            <br>
+
+
+
+        
+        <div v-if="action==1">                                                         
+
+            <table class="table" style="width: 100%;">
+                <tbody>
+                    <tr>
+                        <div style="display: flex; justify-content: space-between;">
+                        <button type="button" @click="showSpecific = true" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 45%;">Sala Especifica</button>
+                        <button type="button" @click="showSpecific = false" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 45%;">Sem preferencia</button>
+                        </div>
+                        <br>
+                        
+
+
+
+                    <div v-if="showSpecific">
+
+                    <div style="display: flex;">        
+                        <label for="salaespecifica-dropdown" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 20%; background-color: #f2f2f2;">Sala especifica</label>
+                        <select  name="Salaespecifica" v-model="Salaespecifica" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px;margin-left: 10px; border: 1px solid #ccc; width: 100%;">
+                        <option value="0"></option>
+                        {% for s in salass %}
+                        <option value="{{s.id}}_{{s.descricao_sala}}"> {{s.nome_instituicao}} - Sala {{s.descricao_sala}}   </option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                        
+                        <br>
+                        
+
+                        <div style="display: flex;">
+                            <label class="label" style="font-size: 1rem;text-align: center; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 20%;background-color: #f2f2f2; font-weight: normal;">Inicio</label>
+                            <div class="control is-clearfix" style="width: 30%;">
+                                <input name="inicio" v-model="inicio" value="{{form.data.value|default_if_none:""}}" type="datetime-local" class="input" style="width: 60%;margin-left: 10px;">
+                            </div>
+                            <label class="label" style="font-size: 1rem;text-align: center; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 20%;background-color: #f2f2f2; font-weight: normal;">Fim</label>
+                            <div class="control is-clearfix" style="width: 30%;">
+                                <input name="fim" v-model="fim" value="{{form.data.value|default_if_none:""}}" type="datetime-local" class="input" style="width: 6'%;margin-left: 10px;">
+                            </div>
+                        </div>
+
+
+                        <br>
+                        
+                                    
+                <div style="display: flex;">  
+                    <label for="descricao" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px;background-color: #f2f2f2; border: 1px solid #ccc; width: 20%;">Descricao</label>
+                    <textarea name="subdescricao" v-model="subdescricao" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px;margin-left: 10px; border: 1px solid #ccc; width: 100%;"></textarea>
+                </div>
+
+                    </div>
+
+                    <div v-else>
+
+                <div style="display: flex;">
+                    <label for="tipo-dropdown" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px;background-color: #f2f2f2; border: 1px solid #ccc; width: 15%;">Tipo de sala</label>
+                    <select name="tipoSala"  v-model="tipoSala" style="font-size: 1rem;margin-right: 10px;margin-left: 10px; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 35%;">
+                        <option value="0"></option>
+                        {% for c in categorias%}
+                        <option   value="{{c.id}}_{{c.tipo_de_sala}}">
+                                {{c.tipo_de_sala}}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <label for="tipo-dropdown" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px;background-color: #f2f2f2; border: 1px solid #ccc; width: 15%;">Edificio</label>
+                    <select name="edificio"  v-model="edificio" style="font-size: 1rem; padding: 0.5rem;margin-left: 10px; border-radius: 4px; border: 1px solid #ccc; width: 45%;">
+                        <option value="0"></option>
+                        {% for t in edificios%}
+                        <option   value="{{t.id}}_{{t.edificio}}">
+                                {{t.edificio}}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                    <br>
+
+                <div style="display: flex;">
+                    <label for="tipo-dropdown" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px;background-color: #f2f2f2; border: 1px solid #ccc; width: 15%;">Instituição</label>
+                    <select name="instituicao"  v-model="instituicao" style="font-size: 1rem; padding: 0.5rem;margin-left: 10px;margin-right: 10px; border-radius: 4px; border: 1px solid #ccc; width: 35%;">
+                        <option value="0"></option>
+                        {% for c in instituicoes%}
+                        <option   value="{{c.id}}_{{c.nome_instituicao}}">
+                                {{c.nome_instituicao}}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <label for="tipo-dropdown" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px;background-color: #f2f2f2; border: 1px solid #ccc; width: 15%;">Tipo de Aula</label>
+                    <br>
+                    <br>
+                    <select name="tipodeaula"  v-model="tipodeaula" style="font-size: 1rem; padding: 0.5rem;margin-left: 10px; border-radius: 4px; border: 1px solid #ccc; width: 45%;">
+                        <option value="0"></option>
+                        {% for d in tipodeaulas %}
+                        <option   value="{{d.id}}_{{d.tipo_aula}}">
+                                {{d.tipo_aula}}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+
+                    <br>
+
+
+                <div style="display: flex;">
+                    <label for="numero-alunos" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px;background-color: #f2f2f2; border: 1px solid #ccc; width: 20%;">Numero de alunos</label>
+                    <input type="number" v-model="numeroAlunos" style="font-size: 1rem; padding: 0.5rem;margin-left: 10px; border-radius: 4px; border: 1px solid #ccc; width: 100%;" min="0" max="1000" placeholder="0-1000" name="numeroAlunos">
+                </div>
+
+                    <br>
+
+
+                    <div style="display: flex;">
+                        <label class="label" style="font-size: 1rem;text-align: center; padding: 0.5rem; border-radius: 4px;background-color: #f2f2f2; border: 1px solid #ccc; width: 20%; font-weight: normal;">Inicio</label>
+                        <div class="control is-clearfix" style="width: 30%;">
+                            <input name="inicio" v-model="inicio" value="{{form.data.value|default_if_none:""}}" type="datetime-local" class="input" style="width: 60%;margin-left: 10px;">
+                        </div>
+                        <label class="label" style="font-size: 1rem;text-align: center;background-color: #f2f2f2; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 20%; font-weight: normal;">Fim</label>
+                        <div class="control is-clearfix" style="width: 30%;">
+                            <input name="fim" v-model="fim" value="{{form.data.value|default_if_none:""}}" type="datetime-local" class="input" style="width: 6'%;margin-left: 10px;">
+                        </div>
+                    </div>
+
+                    <br>        
+                    <div style="display: flex;">  
+                    <label for="descricao" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px;background-color: #f2f2f2; border: 1px solid #ccc; width: 20%;">Descricao</label>
+                    <textarea name="subdescricao" v-model="subdescricao" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px;margin-left: 10px; border: 1px solid #ccc; width: 100%;"></textarea>
+                    </div>
+
+                    </tr>
+                </tbody>
+            </table>
+            <button style="margin-left: 45%;" type="button" class="button is-success" v-on:click="addRow()">Adicionar</button>                       
+        </div>
+
+
+
+        <div v-if="action==2">                                                                      
+
+            <table class="table" style="width: 100%;">
+                <tbody>
+                    <tr>
+                        <div style="display: flex; justify-content: space-between;">
+                        <button type="button" @click="showSpecific = true" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 45%;">Sala Especifica</button>
+                        <button type="button" @click="showSpecific = false" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 45%;">Sem preferencia</button>
+                        </div>
+                        <br>
+                        
+
+
+
+                    <div v-if="showSpecific">
+
+                    <div style="display: flex;">        
+                        <label for="salaespecifica-dropdown" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 20%; background-color: #f2f2f2;">Sala especifica</label>
+                        <select  name="Salaespecifica" v-model="Salaespecifica" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px;margin-left: 10px; border: 1px solid #ccc; width: 100%;">
+                        <option value="0"></option>
+                        {% for s in salass %}
+                        <option value="{{s.id}}_{{s.descricao_sala}}"> {{s.nome_instituicao}} - Sala {{s.descricao_sala}}   </option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                        
+                        <br>
+                        
+
+                        <div style="display: flex;">
+                            <label class="label" style="font-size: 1rem;text-align: center; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 20%;background-color: #f2f2f2; font-weight: normal;">Inicio</label>
+                            <div class="control is-clearfix" style="width: 30%;">
+                                <input name="inicio" v-model="inicio" value="{{form.data.value|default_if_none:""}}" type="datetime-local" class="input" style="width: 60%;margin-left: 10px;">
+                            </div>
+                            <label class="label" style="font-size: 1rem;text-align: center; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 20%;background-color: #f2f2f2; font-weight: normal;">Fim</label>
+                            <div class="control is-clearfix" style="width: 30%;">
+                                <input name="fim" v-model="fim" value="{{form.data.value|default_if_none:""}}" type="datetime-local" class="input" style="width: 6'%;margin-left: 10px;">
+                            </div>
+                        </div>
+
+
+                        <br>
+                        
+                                    
+                <div style="display: flex;">  
+                    <label for="descricao" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px;background-color: #f2f2f2; border: 1px solid #ccc; width: 20%;">Descricao</label>
+                    <textarea name="subdescricao" v-model="subdescricao" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px;margin-left: 10px; border: 1px solid #ccc; width: 100%;"></textarea>
+                </div>
+
+                    </div>
+
+                    <div v-else>
+
+                <div style="display: flex;">
+                    <label for="tipo-dropdown" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px;background-color: #f2f2f2; border: 1px solid #ccc; width: 15%;">Tipo de sala</label>
+                    <select name="tipoSala"  v-model="tipoSala" style="font-size: 1rem;margin-right: 10px;margin-left: 10px; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 35%;">
+                        <option value="0"></option>
+                        {% for c in categorias%}
+                        <option   value="{{c.id}}_{{c.tipo_de_sala}}">
+                                {{c.tipo_de_sala}}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <label for="tipo-dropdown" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px;background-color: #f2f2f2; border: 1px solid #ccc; width: 15%;">Edificio</label>
+                    <select name="edificio"  v-model="edificio" style="font-size: 1rem; padding: 0.5rem;margin-left: 10px; border-radius: 4px; border: 1px solid #ccc; width: 45%;">
+                        <option value="0"></option>
+                        {% for t in edificios%}
+                        <option   value="{{t.id}}_{{t.edificio}}">
+                                {{t.edificio}}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                    <br>
+
+                <div style="display: flex;">
+                    <label for="tipo-dropdown" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px;background-color: #f2f2f2; border: 1px solid #ccc; width: 15%;">Instituição</label>
+                    <select name="instituicao"  v-model="instituicao" style="font-size: 1rem; padding: 0.5rem;margin-left: 10px;margin-right: 10px; border-radius: 4px; border: 1px solid #ccc; width: 35%;">
+                        <option value="0"></option>
+                        {% for c in instituicoes%}
+                        <option   value="{{c.id}}_{{c.nome_instituicao}}">
+                                {{c.nome_instituicao}}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <label for="tipo-dropdown" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px;background-color: #f2f2f2; border: 1px solid #ccc; width: 15%;">Tipo de Aula</label>
+                    <br>
+                    <br>
+                    <select name="tipodeaula"  v-model="tipodeaula" style="font-size: 1rem; padding: 0.5rem;margin-left: 10px; border-radius: 4px; border: 1px solid #ccc; width: 45%;">
+                        <option value="0"></option>
+                        {% for d in tipodeaulas %}
+                        <option   value="{{d.id}}_{{d.tipo_aula}}">
+                                {{d.tipo_aula}}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+
+                    <br>
+
+
+                <div style="display: flex;">
+                    <label for="numero-alunos" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px;background-color: #f2f2f2; border: 1px solid #ccc; width: 20%;">Numero de alunos</label>
+                    <input type="number" v-model="numeroAlunos" style="font-size: 1rem; padding: 0.5rem;margin-left: 10px; border-radius: 4px; border: 1px solid #ccc; width: 100%;" min="0" max="1000" placeholder="0-1000" name="numeroAlunos">
+                </div>
+
+                    <br>
+
+
+                    <div style="display: flex;">
+                        <label class="label" style="font-size: 1rem;text-align: center; padding: 0.5rem; border-radius: 4px;background-color: #f2f2f2; border: 1px solid #ccc; width: 20%; font-weight: normal;">Inicio</label>
+                        <div class="control is-clearfix" style="width: 30%;">
+                            <input name="inicio" v-model="inicio" value="{{form.data.value|default_if_none:""}}" type="datetime-local" class="input" style="width: 60%;margin-left: 10px;">
+                        </div>
+                        <label class="label" style="font-size: 1rem;text-align: center;background-color: #f2f2f2; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 20%; font-weight: normal;">Fim</label>
+                        <div class="control is-clearfix" style="width: 30%;">
+                            <input name="fim" v-model="fim" value="{{form.data.value|default_if_none:""}}" type="datetime-local" class="input" style="width: 6'%;margin-left: 10px;">
+                        </div>
+                    </div>
+
+                    <br>        
+                    <div style="display: flex;">  
+                    <label for="descricao" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px;background-color: #f2f2f2; border: 1px solid #ccc; width: 20%;">Descricao</label>
+                    <textarea name="subdescricao" v-model="subdescricao" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px;margin-left: 10px; border: 1px solid #ccc; width: 100%;"></textarea>
+                    </div>
+
+                    </tr>
+                </tbody>
+            </table>
+            <button style="margin-left: 45%;" type="button" class="button is-success" v-on:click="addRow()">Adicionar</button>                       
+        </div>
+
+
+
+
+        <div v-if="action==3">                                     
+
+  
+            <table class="table" style="width: 100%;">
+                <tbody>
+                    <tr>
+                        <div style="display: flex; justify-content: space-between;">
+                        <button type="button" @click="showSpecific = true" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 45%;">Sala Especifica</button>
+                        <button type="button" @click="showSpecific = false" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 45%;">Sem preferencia</button>
+                        </div>
+                        <br>
+                        
+
+
+
+                    <div v-if="showSpecific">
+
+                    <label style="display: inline-block; font-size: 1rem; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 100%; background-color: #9e9d9d; text-align: center;">Pedido Anterior</label>
+
+                    <br>
+                    <br>
+
+
+                    <div style="display: flex;">        
+                        <label for="salaespecifica-dropdown" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 20%; background-color: #f2f2f2;">Sala especifica</label>
+                        <select  name="Salaespecifica" v-model="Salaespecifica" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px;margin-left: 10px; border: 1px solid #ccc; width: 100%;">
+                        <option value="0"></option>
+                        {% for s in salass %}
+                        <option value="{{s.id}}_{{s.descricao_sala}}"> {{s.nome_instituicao}} - Sala {{s.descricao_sala}}   </option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                        
+                        <br>
+                        
+
+                        <div style="display: flex;">
+                            <label class="label" style="font-size: 1rem;text-align: center; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 20%;background-color: #f2f2f2; font-weight: normal;">Inicio</label>
+                            <div class="control is-clearfix" style="width: 30%;">
+                                <input name="inicio" v-model="inicio" value="{{form.data.value|default_if_none:""}}" type="datetime-local" class="input" style="width: 60%;margin-left: 10px;">
+                            </div>
+                            <label class="label" style="font-size: 1rem;text-align: center; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 20%;background-color: #f2f2f2; font-weight: normal;">Fim</label>
+                            <div class="control is-clearfix" style="width: 30%;">
+                                <input name="fim" v-model="fim" value="{{form.data.value|default_if_none:""}}" type="datetime-local" class="input" style="width: 6'%;margin-left: 10px;">
+                            </div>
+                        </div>
+
+
+                        <br>
+                        
+                                    
+                <div style="display: flex;">  
+                    <label for="descricao" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px;background-color: #f2f2f2; border: 1px solid #ccc; width: 20%;">Descricao</label>
+                    <textarea name="subdescricao" v-model="subdescricao" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px;margin-left: 10px; border: 1px solid #ccc; width: 100%;"></textarea>
+                </div>
+
+                <br>
+
+
+                <label style="display: inline-block; font-size: 1rem; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 100%; background-color: #9e9d9d; text-align: center;">Pedido Novo</label>
+
+                    <br>
+                    <br>
+
+
+                    <div style="display: flex;">        
+                        <label for="salaespecifica-dropdown" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 20%; background-color: #f2f2f2;">Sala especifica</label>
+                        <select  name="editar_Salaespecifica" v-model="editar_Salaespecifica" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px;margin-left: 10px; border: 1px solid #ccc; width: 100%;">
+                        <option value="0"></option>
+                        {% for s in salass %}
+                        <option value="{{s.id}}_{{s.descricao_sala}}"> {{s.nome_instituicao}} - Sala {{s.descricao_sala}}   </option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                        
+                        <br>
+                        
+
+                        <div style="display: flex;">
+                            <label class="label" style="font-size: 1rem;text-align: center; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 20%;background-color: #f2f2f2; font-weight: normal;">Inicio</label>
+                            <div class="control is-clearfix" style="width: 30%;">
+                                <input name="editar_inicio" v-model="editar_inicio" value="{{form.data.value|default_if_none:""}}" type="datetime-local" class="input" style="width: 60%;margin-left: 10px;">
+                            </div>
+                            <label class="label" style="font-size: 1rem;text-align: center; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 20%;background-color: #f2f2f2; font-weight: normal;">Fim</label>
+                            <div class="control is-clearfix" style="width: 30%;">
+                                <input name="editar_fim" v-model="editar_fim" value="{{form.data.value|default_if_none:""}}" type="datetime-local" class="input" style="width: 6'%;margin-left: 10px;">
+                            </div>
+                        </div>
+
+
+                        <br>
+                        
+                                    
+                <div style="display: flex;">  
+                    <label for="descricao" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px;background-color: #f2f2f2; border: 1px solid #ccc; width: 20%;">Descricao</label>
+                    <textarea name="editar_subdescricao" v-model="editar_subdescricao" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px;margin-left: 10px; border: 1px solid #ccc; width: 100%;"></textarea>
+                </div>
+
+                    </div>
+
+                    <div v-else>
+
+                    <label style="display: inline-block; font-size: 1rem; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 100%; background-color: #9e9d9d; text-align: center;">Pedido Anterior</label>
+
+                    <br>
+                    <br>
+
+                <div style="display: flex;">
+                    <label for="tipo-dropdown" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px;background-color: #f2f2f2; border: 1px solid #ccc; width: 15%;">Tipo de sala</label>
+                    <select name="tipoSala"  v-model="tipoSala" style="font-size: 1rem;margin-right: 10px;margin-left: 10px; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 35%;">
+                        <option value="0"></option>
+                        {% for c in categorias%}
+                        <option   value="{{c.id}}_{{c.tipo_de_sala}}">
+                                {{c.tipo_de_sala}}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <label for="tipo-dropdown" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px;background-color: #f2f2f2; border: 1px solid #ccc; width: 15%;">Edificio</label>
+                    <select name="edificio"  v-model="edificio" style="font-size: 1rem; padding: 0.5rem;margin-left: 10px; border-radius: 4px; border: 1px solid #ccc; width: 45%;">
+                        <option value="0"></option>
+                        {% for t in edificios%}
+                        <option   value="{{t.id}}_{{t.edificio}}">
+                                {{t.edificio}}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                    <br>
+
+                <div style="display: flex;">
+                    <label for="tipo-dropdown" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px;background-color: #f2f2f2; border: 1px solid #ccc; width: 15%;">Instituição</label>
+                    <select name="instituicao"  v-model="instituicao" style="font-size: 1rem; padding: 0.5rem;margin-left: 10px;margin-right: 10px; border-radius: 4px; border: 1px solid #ccc; width: 35%;">
+                        <option value="0"></option>
+                        {% for c in instituicoes%}
+                        <option   value="{{c.id}}_{{c.nome_instituicao}}">
+                                {{c.nome_instituicao}}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <label for="tipo-dropdown" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px;background-color: #f2f2f2; border: 1px solid #ccc; width: 15%;">Tipo de Aula</label>
+                    <br>
+                    <br>
+                    <select name="tipodeaula"  v-model="tipodeaula" style="font-size: 1rem; padding: 0.5rem;margin-left: 10px; border-radius: 4px; border: 1px solid #ccc; width: 45%;">
+                        <option value="0"></option>
+                        {% for d in tipodeaulas %}
+                        <option   value="{{d.id}}_{{d.tipo_aula}}">
+                                {{d.tipo_aula}}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+
+                    <br>
+
+
+                <div style="display: flex;">
+                    <label for="numero-alunos" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px;background-color: #f2f2f2; border: 1px solid #ccc; width: 20%;">Numero de alunos</label>
+                    <input type="number" v-model="numeroAlunos" style="font-size: 1rem; padding: 0.5rem;margin-left: 10px; border-radius: 4px; border: 1px solid #ccc; width: 100%;" min="0" max="1000" placeholder="0-1000" name="numeroAlunos">
+                </div>
+
+                    <br>
+
+
+                    <div style="display: flex;">
+                        <label class="label" style="font-size: 1rem;text-align: center; padding: 0.5rem; border-radius: 4px;background-color: #f2f2f2; border: 1px solid #ccc; width: 20%; font-weight: normal;">Inicio</label>
+                        <div class="control is-clearfix" style="width: 30%;">
+                            <input name="inicio" v-model="inicio" value="{{form.data.value|default_if_none:""}}" type="datetime-local" class="input" style="width: 60%;margin-left: 10px;">
+                        </div>
+                        <label class="label" style="font-size: 1rem;text-align: center;background-color: #f2f2f2; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 20%; font-weight: normal;">Fim</label>
+                        <div class="control is-clearfix" style="width: 30%;">
+                            <input name="fim" v-model="fim" value="{{form.data.value|default_if_none:""}}" type="datetime-local" class="input" style="width: 6'%;margin-left: 10px;">
+                        </div>
+                    </div>
+
+                    <br>        
+                    <div style="display: flex;">  
+                    <label for="descricao" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px;background-color: #f2f2f2; border: 1px solid #ccc; width: 20%;">Descricao</label>
+                    <textarea name="subdescricao" v-model="subdescricao" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px;margin-left: 10px; border: 1px solid #ccc; width: 100%;"></textarea>
+                    </div>
+
+                    <br>
+
+                    <label style="display: inline-block; font-size: 1rem; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 100%; background-color: #9e9d9d; text-align: center;">Pedido Novo</label>
+
+                    <br>
+                    <br>
+
+                <div style="display: flex;">
+                    <label for="tipo-dropdown" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px;background-color: #f2f2f2; border: 1px solid #ccc; width: 15%;">Tipo de sala</label>
+                    <select name="editar_tipoSala"  v-model="editar_tipoSala" style="font-size: 1rem;margin-right: 10px;margin-left: 10px; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 35%;">
+                        <option value="0"></option>
+                        {% for c in categorias%}
+                        <option   value="{{c.id}}_{{c.tipo_de_sala}}">
+                                {{c.tipo_de_sala}}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <label for="tipo-dropdown" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px;background-color: #f2f2f2; border: 1px solid #ccc; width: 15%;">Edificio</label>
+                    <select name="editar_edificio"  v-model="editar_edificio" style="font-size: 1rem; padding: 0.5rem;margin-left: 10px; border-radius: 4px; border: 1px solid #ccc; width: 45%;">
+                        <option value="0"></option>
+                        {% for t in edificios%}
+                        <option   value="{{t.id}}_{{t.edificio}}">
+                                {{t.edificio}}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                    <br>
+
+                <div style="display: flex;">
+                    <label for="tipo-dropdown" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px;background-color: #f2f2f2; border: 1px solid #ccc; width: 15%;">Instituição</label>
+                    <select name="editar_instituicao"  v-model="editar_instituicao" style="font-size: 1rem; padding: 0.5rem;margin-left: 10px;margin-right: 10px; border-radius: 4px; border: 1px solid #ccc; width: 35%;">
+                        <option value="0"></option>
+                        {% for c in instituicoes%}
+                        <option   value="{{c.id}}_{{c.nome_instituicao}}">
+                                {{c.nome_instituicao}}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <label for="tipo-dropdown" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px;background-color: #f2f2f2; border: 1px solid #ccc; width: 15%;">Tipo de Aula</label>
+                    <br>
+                    <br>
+                    <select name="editar_tipodeaula"  v-model="editar_tipodeaula" style="font-size: 1rem; padding: 0.5rem;margin-left: 10px; border-radius: 4px; border: 1px solid #ccc; width: 45%;">
+                        <option value="0"></option>
+                        {% for d in tipodeaulas %}
+                        <option   value="{{d.id}}_{{d.tipo_aula}}">
+                                {{d.tipo_aula}}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+
+                    <br>
+
+
+                <div style="display: flex;">
+                    <label for="numero-alunos" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px;background-color: #f2f2f2; border: 1px solid #ccc; width: 20%;">Numero de alunos</label>
+                    <input type="editar_number" v-model="editar_numeroAlunos" style="font-size: 1rem; padding: 0.5rem;margin-left: 10px; border-radius: 4px; border: 1px solid #ccc; width: 100%;" min="0" max="1000" placeholder="0-1000" name="numeroAlunos">
+                </div>
+
+                    <br>
+
+
+                    <div style="display: flex;">
+                        <label class="label" style="font-size: 1rem;text-align: center; padding: 0.5rem; border-radius: 4px;background-color: #f2f2f2; border: 1px solid #ccc; width: 20%; font-weight: normal;">Inicio</label>
+                        <div class="control is-clearfix" style="width: 30%;">
+                            <input name="editar_inicio" v-model="editar_inicio" value="{{form.data.value|default_if_none:""}}" type="datetime-local" class="input" style="width: 60%;margin-left: 10px;">
+                        </div>
+                        <label class="label" style="font-size: 1rem;text-align: center;background-color: #f2f2f2; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 20%; font-weight: normal;">Fim</label>
+                        <div class="control is-clearfix" style="width: 30%;">
+                            <input name="editar_fim" v-model="editar_fim" value="{{form.data.value|default_if_none:""}}" type="datetime-local" class="input" style="width: 6'%;margin-left: 10px;">
+                        </div>
+                    </div>
+
+                    <br>        
+                    <div style="display: flex;">  
+                    <label for="descricao" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px;background-color: #f2f2f2; border: 1px solid #ccc; width: 20%;">Descricao</label>
+                    <textarea name="editar_subdescricao" v-model="editar_subdescricao" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px;margin-left: 10px; border: 1px solid #ccc; width: 100%;"></textarea>
+                    </div>
+
+                    </tr>
+                </tbody>
+            </table>
+            <button style="margin-left: 45%;" type="button" class="button is-success" v-on:click="addRow()">Adicionar</button>                       
+        </div>
+
+
+
+
+
+    
+        </div>
+    
+    </div>
+    `,
+    data() {
+        return{
+            error: false,
+            numeroAlunos: "",
+            subdescricao: "",
+            Salaespecifica: "",
+            edificio: "",
+            instituicao: "",
+            tipodeaula: "",
+            tipoSala: "",
+            inicio: "",
+            fim: "",
+
+            edificio_name: "",
+            instituicao_name: "",
+            tipodeaula_name: "",
+            tipoSala_name: "",
+            Salaespecifica_name: "",
+
+
+            editar_numeroAlunos: "",
+            editar_subdescricao: "",
+            editar_Salaespecifica: "",
+            editar_edificio: "",
+            editar_instituicao: "",
+            editar_tipodeaula: "",
+            editar_tipoSala: "",
+            editar_inicio: "",
+            editar_fim: "",
+
+            editar_edificio_name: "",
+            editar_instituicao_name: "",
+            editar_tipodeaula_name: "",
+            editar_tipoSala_name: "",
+            editar_Salaespecifica_name: "",
+
+
+            showSpecific: false,
+            action:0
+        };
+    },
+    computed: {
+        valueError(){
+            return this.error;
+        }
+    },
+    methods: {
+        clearInput(){
+            this.numeroAlunos= "",
+            this.subdescricao= "",
+            this.Salaespecifica= "",
+            this.edificio= "",
+            this.instituicao= "",
+            this.tipodeaula= "",
+            this.tipoSala= "",
+            this.inicio= "",
+            this.fim= "",
+            
+
+            this.edificio_name="",
+            this.instituicao_name="",
+            this.tipoSala_name="",
+            this.tipodeaula_name="",
+            this.Salaespecifica_name= "",
+
+
+            this.editar_numeroAlunos= "",
+            this.editar_subdescricao= "",
+            this.editar_Salaespecifica= "",
+            this.editar_edificio= "",
+            this.editar_instituicao= "",
+            this.editar_tipodeaula= "",
+            this.editar_tipoSala= "",
+            this.editar_inicio= "",
+            this.editar_fim= "",
+            
+
+            this.editar_edificio_name="",
+            this.editar_instituicao_name="",
+            this.editar_tipoSala_name="",
+            this.editar_tipodeaula_name="",
+            this.editar_Salaespecifica_name= "",
+
+            this.action=0,
+            this.error= false
+        },
+        hasError() {
+            const today = new Date();
+            const inicioDate = new Date(this.inicio);
+            const fimDate = new Date(this.fim);
+            if(this.showSpecific==false && this.action==3){
+                const editar_inicioDate = new Date(this.editar_inicio);
+                const editar_fimDate = new Date(this.editar_fim);
+                return (typeof this.editar_tipoSala == 'undefined' || typeof this.editar_instituicao == 'undefined' || typeof this.editar_tipodeaula == 'undefined'|| typeof this.editar_edificio == 'undefined'  || typeof this.tipoSala == 'undefined' || typeof this.instituicao == 'undefined' || typeof this.tipodeaula == 'undefined' || typeof this.edificio == 'undefined'  ||this.editar_tipoSala.split('_')[0] == 0 || this.editar_instituicao.split('_')[0] == 0 || this.editar_tipodeaula.split('_')[0] == 0  || this.editar_edificio.split('_')[0] == 0  || this.tipoSala.split('_')[0] == 0 || this.instituicao.split('_')[0] == 0 || this.tipodeaula.split('_')[0] == 0 || this.edificio.split('_')[0] == 0  ||  this.editar_descricao < 5 ||inicioDate < today || inicioDate >= fimDate || editar_inicioDate < today || editar_inicioDate >= editar_fimDate || this.subdescricao.length < 5);
+            }else if(this.showSpecific==false){
+            return (typeof this.tipoSala =='undefined' || typeof this.instituicao =='undefined' || typeof this.tipodeaula =='undefined' || typeof this.edificio =='undefined'  ||this.tipoSala.split('_')[0] == 0 || this.instituicao.split('_')[0] == 0 || this.tipodeaula.split('_')[0] == 0 || this.edificio.split('_')[0] == 0  ||inicioDate < today || inicioDate >= fimDate || this.subdescricao.length < 5);
+            }else if(this.action==3){
+                const editar_inicioDate = new Date(this.editar_inicio);
+                const editar_fimDate = new Date(this.editar_fim);
+                return(typeof this.Salaespecifica=='undefined'||typeof this.editar_Salaespecifica=='undefined' ||this.editar_Salaespecifica.split('_')[0]==0||this.Salaespecifica.split('_')[0]==0 || inicioDate < today || inicioDate >= fimDate || this.subdescricao.length < 5 || this.editar_descricao < 5 ||editar_inicioDate < today || editar_inicioDate >= editar_fimDate);
+            }else{
+                
+                return(typeof this.Salaespecifica== 'undefined'||this.Salaespecifica.split('_')[0]==0||inicioDate < today || inicioDate >= fimDate || this.subdescricao.length < 5);
+            }
+        },
+        addRow(){
+            if(!this.hasError()){
+                let novoSubpedido;
+                if(this.showSpecific==false && this.action==3){
+                novoSubpedido = {
+                    numero_alunos: this.numeroAlunos,
+                    descricao: this.subdescricao,
+                    sala_especifica: "",
+                    tipo_sala: this.tipoSala.split('_')[0],
+                    instituicao: this.instituicao.split('_')[0],
+                    tipodeaula: this.tipodeaula.split('_')[0],
+                    edificio: this.edificio.split('_')[0],
+                    inicio: this.inicio,
+                    fim: this.fim,
+                    action: this.action,
+                    edificio_name: this.edificio.split('_')[1],
+                    instituicao_name: this.instituicao.split('_')[1],
+                    tipodeaula_name: this.tipodeaula.split('_')[1],
+                    tipoSala_name: this.tipoSala.split('_')[1],
+
+                    
+                    editar_numero_alunos: this.editar_numeroAlunos,
+                    editar_descricao: this.editar_subdescricao,
+                    editar_sala_especifica: "",
+                    editar_tipo_sala: this.editar_tipoSala.split('_')[0],
+                    editar_instituicao: this.editar_instituicao.split('_')[0],
+                    editar_tipodeaula: this.editar_tipodeaula.split('_')[0],
+                    editar_edificio: this.editar_edificio.split('_')[0],
+                    editar_inicio: this.editar_inicio,
+                    editar_fim: this.editar_fim,
+                    editar_edificio_name:this.editar_edificio.split('_')[1],
+                    editar_instituicao_name:this.editar_instituicao.split('_')[1],
+                    editar_tipodeaula_name:this.editar_tipodeaula.split('_')[1],
+                    editar_tipoSala_name:this.editar_tipoSala.split('_')[1],
+                    
+                };
+                }
+                else if(this.showSpecific==false){
+                    novoSubpedido = {
+                    numero_alunos: this.numeroAlunos,
+                    descricao: this.subdescricao,
+                    sala_especifica: "",
+                    tipo_sala: this.tipoSala.split('_')[0],
+                    instituicao: this.instituicao.split('_')[0],
+                    tipodeaula: this.tipodeaula.split('_')[0],
+                    edificio: this.edificio.split('_')[0],
+                    inicio: this.inicio,
+                    fim: this.fim,
+                    action: this.action,
+                    edificio_name: this.edificio.split('_')[1],
+                    instituicao_name: this.instituicao.split('_')[1],
+                    tipodeaula_name: this.tipodeaula.split('_')[1],
+                    tipoSala_name: this.tipoSala.split('_')[1],
+                    
+                };
+                }
+                else if(this.action==3){
+                    novoSubpedido = {
+                    numero_alunos: 0,
+                    descricao: this.subdescricao,
+                    sala_especifica: this.Salaespecifica.split('_')[0],
+                    action: this.action,
+                    editar_descricao: this.editar_subdescricao,
+                    inicio: this.inicio,
+                    editar_inicio: this.editar_inicio,
+                    fim: this.fim,
+                    editar_fim: this.editar_fim,
+                    editar_sala_especifica: this.editar_Salaespecifica.split('_')[0],
+                    Salaespecifica_name: this.Salaespecifica.split('_')[1],
+                    editar_Salaespecifica_name: this.editar_Salaespecifica.split('_')[1],
+
+
+
+
+
+
+                };
+                }
+                else{
+                    novoSubpedido = {
+                    numero_alunos: 0,
+                    descricao: this.subdescricao,
+                    sala_especifica: this.Salaespecifica.split('_')[0],
+                    Salaespecifica_name: this.Salaespecifica.split('_')[1],
+                    action: this.action,
+
+                    inicio: this.inicio,
+                    fim: this.fim
+                };
+
+                }
+
+                this.subpedidos.push(novoSubpedido);
+                this.clearInput();
+                this.error = false;
+            } 
+            else{
+                this.error = true;
+            } 
+        },    
+    },
+});
+
+
+
+var app = new Vue({
+    delimiters: ["[[", "]]"],
+    el: '#editar-pedido',
+    data(){
+        return{
+            subpedidos: [],
+            salas: []
+        }
+    },
+    mounted(){
+        var a = "{{pedidos}}";
+        var f = "{{fase}}";
+        if (f === "True") {
+            this.getSubPedidosFirst(a);
+        } 
+        else {
+            this.getSubPedidos(a);
+        }
+	},
+    methods: {
+        removeRow(index){
+            this.subpedidos.splice(index, 1);
+        },
+        getSubPedidos(subpedidos){
+            if(subpedidos.length > 3){
+                let arrayValores = subpedidos.split("&#x27;");
+
+                console.log(arrayValores)
+            
+                for (let i = 0; i < arrayValores.length;){
+
+                    console.log("START - " + i)
+
+                    let index = arrayValores.indexOf("action",i);
+                    let acao = arrayValores[index+2];
+                    if (acao.length > 2){
+                        acao = acao.split(':')[1].split(',')[0].split(' ')[1];
+                    }
+                    console.log("acao - " +acao)
+
+
+
+                    let index_2 = arrayValores.indexOf("sala_especifica",i,arrayValores.indexOf("fim",i));
+                    let tipo
+                    
+                    if(!isNaN(arrayValores[index_2+2])){
+                        tipo = arrayValores[index_2+2];
+                    }else{
+                         tipo = arrayValores[index_2+1].split(':')[1].split(',')[0].split(' ')[1];
+                    }
+
+                    console.log("tipo - " + tipo)
+
+                    
+                    if(arrayValores[i]!="[{" && arrayValores[i]!="}, {"){
+                        i--
+                    }
+
+
+
+
+
+                    for(let j = i; j < arrayValores.length;j++){
+                        console.log(j + " " + arrayValores[j]);
+                    }
+
+                    console.log("---------------------------")
+
+
+
+
+                    if(arrayValores[i] == "}]"){
+                        break;
+                    }
+
+                    
+                    if(acao==3 && tipo==''){
+                        
+                        const novoSubpedido = {
+                            numero_alunos: arrayValores[i+3],
+                            descricao: arrayValores[i+7],
+                            sala_especifica: arrayValores[i+11],
+                            tipo_sala: arrayValores[i+15],
+                            instituicao: arrayValores[i+19],
+                            tipodeaula: arrayValores[i+23],
+                            edificio: arrayValores[i+27],
+                            inicio: arrayValores[i+31],
+                            fim: arrayValores[i+35],
+                            action:arrayValores[i+39],
+                            edificio_name: arrayValores[i+43],
+                            instituicao_name: arrayValores[i+47],
+                            tipodeaula_name: arrayValores[i+51],
+                            tipoSala_name: arrayValores[i+55],
+                            editar_numero_alunos:arrayValores[i+59],
+                            editar_descricao:arrayValores[i+63],
+                            editar_sala_especifica:arrayValores[i+67],
+                            editar_tipo_sala:arrayValores[i+71],
+                            editar_instituicao:arrayValores[i+75],
+                            editar_tipodeaula:arrayValores[i+79],
+                            editar_edificio:arrayValores[i+83],
+                            editar_inicio:arrayValores[i+87],
+                            editar_fim:arrayValores[i+91],
+                            editar_edificio_name:arrayValores[i+95],
+                            editar_instituicao_name:arrayValores[i+99],
+                            editar_tipodeaula_name:arrayValores[i+103],
+                            editar_tipoSala_name:arrayValores[i+107],
+                        }
+                        
+                        i+=108;  
+                        this.subpedidos.push(novoSubpedido);                       
+                        
+                    }
+                    else if(tipo==''){
+                        const novoSubpedido = {
+                            numero_alunos: arrayValores[i+3],
+                            descricao: arrayValores[i+7],
+                            sala_especifica: arrayValores[i+11],
+                            tipo_sala: arrayValores[i+15],
+                            instituicao: arrayValores[i+19],
+                            tipodeaula: arrayValores[i+23],
+                            edificio: arrayValores[i+27],
+                            inicio: arrayValores[i+31],
+                            fim: arrayValores[i+35],
+                            action:arrayValores[i+39],
+                            edificio_name: arrayValores[i+43],
+                            instituicao_name: arrayValores[i+47],
+                            tipodeaula_name: arrayValores[i+51],
+                            tipoSala_name: arrayValores[i+55],
+
+                        };
+                        i+=56;
+                        this.subpedidos.push(novoSubpedido);
+                    }
+                    else if(acao==3){
+  
+                        const novoSubpedido = {
+                            numero_alunos: Number(arrayValores[i+2].split(': ')[1].split(',')[0]),
+                            descricao: arrayValores[i+5],
+                            sala_especifica: arrayValores[i+9],
+                            action:arrayValores[i+13],
+                            editar_descricao:arrayValores[i+17],
+                            inicio: arrayValores[i+21],
+                            editar_inicio:arrayValores[i+25],
+                            fim: arrayValores[i+29],
+                            editar_fim:arrayValores[i+33],
+                            editar_sala_especifica:arrayValores[i+37],
+                            Salaespecifica_name: arrayValores[i+41],
+                            editar_Salaespecifica_name: arrayValores[i+45],
+                            
+                        };
+                        i+=46;
+                        this.subpedidos.push(novoSubpedido);
+                    }
+                    else {
+                        if (String(arrayValores[i+8]) == ": "){
+                            const novoSubpedido = {
+                                numero_alunos: Number(arrayValores[i+2].split(':')[1].split(',')[0].split(' ')[1]),
+                                descricao: arrayValores[i+5],
+                                sala_especifica:arrayValores[i+9],
+                                Salaespecifica_name: arrayValores[i+13],
+                                action:arrayValores[i+17],
+                                inicio: arrayValores[i+21],
+                                fim: arrayValores[i+25],
+                            };
+                        i+=26;
+                        this.subpedidos.push(novoSubpedido);
+                        }
+                        else{
+                            const novoSubpedido = {
+                            numero_alunos: Number(arrayValores[i+2].split(':')[1].split(',')[0].split(' ')[1]),
+                            descricao: arrayValores[i+5],
+                            sala_especifica:Number(arrayValores[i+8].split(':')[1].split(',')[0].split(' ')[1]),
+                            Salaespecifica_name: arrayValores[i+11],
+                            action:arrayValores[i+15],
+                            inicio: arrayValores[i+19],
+                            fim: arrayValores[i+23],
+                        };
+                        i+=24;
+                        this.subpedidos.push(novoSubpedido);
+
+
+                        }
+                    }
+
+
+                }
+            }
+           
+        },
+        getSubPedidosFirst(subpedidos){
+            if(subpedidos.length > 3){
+                let arrayValores = subpedidos.split("&#x27;");
+
+                console.log(arrayValores)
+
+     
+
+                for (let i = 1; i < arrayValores.length;){
+
+
+                    console.log("START - " + i)
+
+                    let index = arrayValores.indexOf("action",i);
+                    let acao = arrayValores[index+1];
+                    if (acao.length > 2){
+                        acao = acao.split(':')[1].split(',')[0].split(' ')[1];
+                    }
+                    console.log("acao - " +acao)
+
+
+
+                    let index_2 = arrayValores.indexOf("sala_especifica",i,arrayValores.indexOf("fim",i));
+                    let tipo = arrayValores[index_2+1];
+                    tipo = tipo.split(':')[1].split(',')[0].split(' ')[1];
+
+                    console.log("tipo - " + tipo)
+
+                    
+                    if(arrayValores[i]!="numero_alunos"){
+                        i--
+                    }
+
+
+
+
+
+                    for(let j = i; j < arrayValores.length;j++){
+                        console.log(j + " " + arrayValores[j]);
+                    }
+
+                    console.log("---------------------------")
+
+
+                    
+                    if(acao==3 && tipo==''){
+                        const novoSubpedido = {
+                            numero_alunos: arrayValores[i+1].split(':')[1].split(',')[0],
+                            descricao: arrayValores[i+4],
+                            sala_especifica: arrayValores[i+8],
+                            tipo_sala: arrayValores[i+11].split(':')[1].split(',')[0],
+                            instituicao: arrayValores[i+13].split(':')[1].split(',')[0],
+                            tipodeaula: arrayValores[i+15].split(':')[1].split(',')[0],
+                            edificio: arrayValores[i+17].split(':')[1].split(',')[0],
+                            inicio: this.convertDatetime(String(arrayValores[i+19])),
+                            fim: this.convertDatetime(String(arrayValores[i+21])),
+                            action:String(arrayValores[i+23].split(': ')[1].split(',')[0]),
+                            edificio_name: arrayValores[i+26],
+                            instituicao_name: arrayValores[i+30],
+                            tipodeaula_name: arrayValores[i+34],
+                            tipoSala_name: arrayValores[i+38],
+                            editar_numero_alunos:arrayValores[i+41].split(':')[1].split(',')[0],
+                            editar_descricao:arrayValores[i+44],
+                            editar_sala_especifica:arrayValores[i+49],
+                            editar_instituicao:arrayValores[i+51].split(':')[1].split(',')[0],
+                            editar_tipodeaula:arrayValores[i+53].split(':')[1].split(',')[0],
+                            editar_edificio:arrayValores[i+55].split(':')[1].split(',')[0],
+                            editar_inicio:this.convertDatetime(String(arrayValores[i+57])),
+                            editar_fim:this.convertDatetime(String(arrayValores[i+57])),
+                            editar_edificio_name:arrayValores[i+62],
+                            editar_instituicao_name:arrayValores[i+66],
+                            editar_tipodeaula_name:arrayValores[i+70],
+                            editar_tipoSala_name:arrayValores[i+74],
+                            editar_tipo_sala:arrayValores[i+77].split(': ')[1].split('}]')[0],
+                        };
+                        i+=109;
+                        this.subpedidos.push(novoSubpedido);
+                    }
+                    else if(tipo==''){
+                        const novoSubpedido = {
+                            numero_alunos:  arrayValores[i+1].split(':')[1].split(',')[0],
+                            descricao: arrayValores[i+4],
+                            sala_especifica: arrayValores[i+8],
+                            tipo_sala: arrayValores[i+11].split(':')[1].split(',')[0],
+                            instituicao: arrayValores[i+13].split(':')[1].split(',')[0],
+                            tipodeaula: arrayValores[i+15].split(':')[1].split(',')[0],
+                            edificio: arrayValores[i+17].split(':')[1].split(',')[0],
+                            inicio: this.convertDatetime(String(arrayValores[i+19])),
+                            fim: this.convertDatetime(String(arrayValores[i+21])),
+                            action:String(arrayValores[i+23].split(':')[1].split(',')[0].split(' ')[1]),
+                            edificio_name: arrayValores[i+26],
+                            instituicao_name: arrayValores[i+30],
+                            tipodeaula_name: arrayValores[i+34],
+                            tipoSala_name: arrayValores[i+38],
+
+                        };
+                        i+=41;
+                        this.subpedidos.push(novoSubpedido);
+                    }
+                    else if(acao==3){
+                        const novoSubpedido = {
+                            numero_alunos: Number(arrayValores[i+1].split(': ')[1].split(',')[0]),
+                            descricao: arrayValores[i+4],
+                            sala_especifica: arrayValores[i+7].split(': ')[1].split(',')[0],
+                            action:arrayValores[i+9].split(': ')[1].split(',')[0],
+                            editar_descricao:arrayValores[i+12],
+                            inicio: this.convertDatetime(String(arrayValores[i+15])),
+                            editar_inicio:this.convertDatetime(String(arrayValores[i+17])),
+                            fim: this.convertDatetime(String(arrayValores[i+19])),
+                            editar_fim:this.convertDatetime(String(arrayValores[i+21])),
+                            editar_sala_especifica:arrayValores[i+23].split(': ')[1].split(',')[0],
+                            Salaespecifica_name: arrayValores[i+26],
+                            editar_Salaespecifica_name: arrayValores[i+30],
+
+
+                        
+                         
+                        };
+                        i+=32;
+                        this.subpedidos.push(novoSubpedido);
+                    }
+                    else {
+                        
+                        const novoSubpedido = {
+                            numero_alunos: Number(arrayValores[i+1].split(':')[1].split(',')[0].split(' ')[1]),
+                            descricao: arrayValores[i+4],
+                            sala_especifica:  Number(arrayValores[i+7].split(':')[1].split(',')[0].split(' ')[1]),
+                            Salaespecifica_name: arrayValores[i+10],
+                            action: String(arrayValores[i+13].split(':')[1].split(',')[0].split(' ')[1]),
+                            inicio: this.convertDatetime(String(arrayValores[i+15])),
+                            fim: this.convertDatetime(String(arrayValores[i+17])),
+                        };
+                        i+=18;
+                        this.subpedidos.push(novoSubpedido);
+                    }
+
+
+
+
+                }
+
+                
+            }
+                
+        },
+         convertDatetime(datetimeStr) {
+                const regex = /datetime\.datetime\((\d+), (\d+), (\d+), (\d+), (\d+), .*?\)/;
+                const match = datetimeStr.match(regex);
+                if (match) {
+                        const [, year, month, day, hour, minute] = match;
+                        const formattedDatetime = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T${hour.padStart(2, '0')}:${minute.padStart(2, '0')}`;
+                        return formattedDatetime;
+                    }
+                    return null;
+                }
+                },
+            });
+    
+</script>
+{% endblock scripts %}

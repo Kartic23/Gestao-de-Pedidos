@@ -1,0 +1,56 @@
+{% extends 'app.html' %}
+
+{% load static %}
+
+{% block title %}- Consultar Ano  Letivo{% endblock title %}
+
+{% block content %}
+<h2 class="title has-text-grey is-uppercase" style="font-size: 2.0rem;">
+    Listagem de Ano Letivo:
+</h2>
+<ul>
+    <a href="{% url 'anoletivo:criar-ano-letivo' %}" class="button is-success " >Criar Ano Letivo</a>
+    <div>
+        &nbsp;
+    </div>
+    <table class="table" style="width: 100%; ">
+        <thead style="background-color: rgb(51, 151, 131);">
+            <tr>
+              <th style="text-align: center">Ano Letivo</th>
+              <th style="text-align: center">Início das Aulas</th>
+              <th style="text-align: center">Fim das Aulas</th>
+              <th style="text-align: center">Estado</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody style="background-color: rgb(218, 226, 226);">
+            {% for ano in anos %}
+            <tr>
+                <th style="text-align: center; font-weight: normal;">{{ano.ano_letivo}}</th>
+                <th style="text-align: center ; font-weight: normal;">{{ano.dia_inicio}}</th>
+                <th style="text-align: center ; font-weight: normal;">{{ano.dia_fim}}</th>
+                <th>
+                {% if ano.ativo == 'S' %}
+                <span class="button "  style="background-color: aqua; font-weight: normal; width:100%"> Ativo </span>
+                {% elif ano.ativo == 'N' %}
+                <span class="button" style="background-color: yellow;  font-weight: normal; width:100%"> Desativado </span>
+                {% endif %}
+                </th>
+                <th>
+                    {% if ano.ativo == 'N' %}
+                        <a href="{% url 'anoletivo:ativar-desativar-ano-letivo' ano.id %}" class="button is-success" >Ativar</a>
+                        <a href="{% url 'anoletivo:eliminar-ano-letivo' ano.id %}" class="button is-danger" >Eliminar</a>
+                    {% endif %}
+                </th>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+  
+</ul>
+{% endblock content %}
+
+
+{% block scripts %}
+
+{% endblock scripts %}

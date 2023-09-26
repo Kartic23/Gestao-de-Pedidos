@@ -1,0 +1,366 @@
+{% extends 'app.html' %}
+
+{% load static %}
+
+{% block title %}- Editar Pedido Horario{% endblock title %}
+
+
+
+{% block content %}
+
+<div id="editar-pedido">
+
+<form method="post">
+    {% csrf_token %}
+
+    <div style="padding: 1rem 2vw 0px;">
+            <hr>
+                <h2 class="title has-text-grey is-uppercase" style="font-size: 2.0rem;">
+                    Editar Pedido Horário
+                </h2>
+                {% if msg %}
+                    <div  style="margin-left:30%;margin-right:30%; margin-top:0%">
+                        <div style="margin-top:2%;text-align: center;position:center;">
+                            <article class="message is-danger">
+                                <div class="message-body">
+                                    <p style="text-align: center;">
+                                        {{erros}}
+                                    </p>
+                                </div>
+                            </article>
+                        </div>
+                    </div> 
+                {% endif %}
+            <div class="columns">
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Assunto: </label>
+                        <div class="control is-clearfix">
+                            <input type="text" id="assunto" name="assunto" value="{{form.assunto.value|default_if_none:""}}" style=" font-size: 1rem;  padding: 0.5rem;  border-radius: 4px;  border: 1px solid #ccc;  width: 100%; " required />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="columns">
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Data alvo: </label>
+                        <div class="control is-clearfix">
+                            <input name="data" value="{{form.data.value|default_if_none:""}}" type="date" class="input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="columns">
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Descrição: </label>
+                        <div class="control is-clearfix">
+                            <textarea
+                            id="descricao"
+                            name="descricao"
+                            value="{{form.descricao.value|default_if_none:""}}"
+                            style="
+                              font-size: 1rem;
+                              padding: 0.5rem;
+                              border-radius: 4px;
+                              border: 1px solid #ccc;
+                              width: 100%;
+                              min-height: 10rem;
+                            "
+                            required
+                          >{{form.descricao.value}}</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> 
+
+        <div>&nbsp;</div>
+        <select name="selected_option"  v-model="selectedOption" class="label" style="width:100%" required>
+            <option> </option>
+            <option name="2" value="2">Enviar ficheiro</option>
+            <option name="1" value="1">Preencher tabela</option>
+        </select>
+        <div>&nbsp;</div>
+        <div v-if="selectedOption === '2'" >
+            {% if file_url %}
+                <a  v-show="showFileBox === 2"   class="button" href="{{file_url}}">Ficheiro do Pedido</a>
+                <span v-show="showFileBox === 2"  v-on:click="change() "class="button is-danger" >Eliminar</span>
+            {% endif %}
+            <input name="arquivo" v-show="showFileBox === 1" type="file" class="button" style="width: 100%" v-required >
+
+        </div>
+
+        <table class="table" v-show="selectedOption === '1'" style="width: 100%; background-color: rgb(51, 151, 131);">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Ação</th>
+                <th>Data</th>
+                <th>Hora Inicial</th>
+                <th>Hora Final</th>
+                <th>Descrição</th>
+              </tr>
+            </thead>
+            <tbody style="background-color: #ccc;">
+                <tr v-for="(subpedido, index) in subpedidos" :key="index">
+                    <th>
+                        <button type="button" class="button is-danger is-small" v-on:click="removeRow(index)">Remover</button>
+                    </th>
+                    <th style="font-weight: normal;">[[subpedido.acoes]]</th>
+                    <th style="font-weight: normal;">[[subpedido.date_h]]</th>
+                    <th style="font-weight: normal;">[[subpedido.timeinicial]]</th>
+                    <th style="font-weight: normal;">[[subpedido.timefinal]]</th>
+                    <th style="font-weight: normal;">[[subpedido.descricao]]</th>
+                </tr>
+            </tbody>
+        </table>
+
+        <add-subpedido v-show="selectedOption === '1'" :subpedidos="subpedidos"></add-subpedido>
+
+    
+        <input type="hidden" name="subpedidos" v-bind:value="JSON.stringify(subpedidos)">
+        
+
+        <div style="margin-top:8%;text-align:center;position:center;">
+            <button type="button" value="Voltar" class="button is-outlined" style="margin-right:5%" onclick="history.back();" >Voltar</button>
+            <button type="submit" class="button is-success is-outlined">
+                <span>Confirmar</span>
+            </button>
+        </div>
+    </form>
+</div>
+
+
+{% endblock content %}
+
+{% block scripts %}
+<script>
+
+    axios.defaults.xsrfCookieName = 'csrftoken';
+    axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+    
+    Vue.component('add-subpedido', {
+        delimiters: ["[[", "]]"],
+        props: ['subpedidos'],
+        template: ` 
+        <div>
+            <div>                 
+                <article v-if="valueError" class="message is-danger">
+                    <div class="message-body">
+                        <p style="text-align: center;">
+                            [[mensage]]
+                        </p>
+                    </div>
+                </article>
+            
+                <table class="table" style="width: 100%;">
+                <tbody>
+                    <tr>
+                        <td>
+                            <select style="font-size: 1rem; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 100%;" placeholder="Ações" v-model="subacoes"">
+                                <option value="criar">Criar</option>
+                                <option value="alterar">Alterar</option>
+                                <option value="eliminar">Eliminar</option>
+                            </select>
+                        </td>
+                        <div v-if="subacoes === 'alterar'">
+                            <span style="font-weight: bold; padding: 0.75rem">Horário Antigo</span>
+                            <table class="table" style="width: 100%;">
+                            <td>
+                                <input type="date" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 100%;" placeholder="Data" v-model="antigosubdate_h"">
+                            </td>
+                            <td>
+                                <input type="time" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 100%;" placeholder="Hora inicial" v-model="antigosubtimeinicial"">
+                            </td>
+                            <td>
+                                <input type="time" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 100%;" placeholder="Hora final" v-model="antigosubtimefinal"">
+                            </td>
+                            <td>
+                                <input type="text" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 100%;" placeholder="Descrição" v-model="antigosubdescricao"">
+                            </td>
+                            </table>
+                            <span style="font-weight: bold; padding: 0.75rem">Horário Novo</span>
+                            <table class="table" style="width: 100%;">
+                            <td>
+                                <input type="date" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 100%;" placeholder="Data" v-model="subdate_h"">
+                            </td>
+                            <td>
+                                <input type="time" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 100%;" placeholder="Hora inicial" v-model="subtimeinicial"">
+                            </td>
+                            <td>
+                                <input type="time" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 100%;" placeholder="Hora final" v-model="subtimefinal"">
+                            </td>
+                            <td>
+                                <input type="text" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 100%;" placeholder="Descrição" v-model="subdescricao"">
+                            </td>
+                            </table>
+                        </div>
+                        <div v-else>
+                            <table class="table" style="width: 100%;">
+                                <td>
+                                    <input type="date" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 100%;" placeholder="Data" v-model="subdate_h"">
+                                </td>
+                                <td>
+                                    <input type="time" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 100%;" placeholder="Hora inicial" v-model="subtimeinicial"">
+                                </td>
+                                <td>
+                                    <input type="time" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 100%;" placeholder="Hora final" v-model="subtimefinal"">
+                                </td>
+                                <td>
+                                    <input type="text" style="font-size: 1rem; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; width: 100%;" placeholder="Descrição" v-model="subdescricao"">
+                                </td>
+                            </table>
+                        </div> 
+                    </tr>
+                </tbody>
+            </table>
+            <button style="margin-left: 50%;" type="button" class="button is-success" v-on:click="addRow()">Adicionar</button>                           
+        </div>
+    
+    </div>
+    `,
+    data() {
+        return{
+            mensage: "",
+            error: false,
+            subacoes: "",
+            subdate_h: "",
+            subtimeinicial: "",
+            subtimefinal: "",
+            subdescricao: "",
+            antigosubdate_h: "",
+            antigosubtimeinicial: "",
+            antigosubtimefinal: "",
+            antigosubdescricao: "",
+        };
+    },
+    computed: {
+        valueError(){
+            return this.error;
+        }
+    },
+    methods: {
+        clearInput(){
+            this.subacoes = "";
+            this.subtimeinicial = "";
+            this.subtimefinal = "";
+            this.subdescricao = "";
+            this.subdate_h = "";
+            this.antigosubtimeinicial = "";
+            this.antigosubtimefinal = "";
+            this.antigosubdescricao = "";
+            this.antigosubdate_h = "";
+        },
+        hasError1() {
+            if(this.subacoes == "Alterar")
+                return (this.subacoes < 1 || this.antigosubdescricao.length < 5 || this.antigosubdate_h.length < 1 || this.antigosubtimeinicial.length < 1 || this.antigosubtimefinal.length < 1|| this.subdescricao.length < 5 || this.subdate_h.length < 1 || this.subtimeinicial.length < 1 || this.subtimefinal.length < 1)
+            else
+                return (this.subacoes < 1 || this.subdescricao.length < 5 || this.subdate_h.length < 1 || this.subtimeinicial.length < 1 || this.subtimefinal.length < 1)
+        },
+        hasError2() {
+            if(this.subacoes == "Alterar")
+                return (this.subtimeinicial >= this.subtimefinal || this.antigosubtimeinicial >= this.antigosubtimefinal)
+            else  
+                return (this.subtimeinicial >= this.subtimefinal)
+        },
+        hasError3() {
+            const today = new Date();
+            const fimDate1 = new Date(this.subdate_h);
+            if(this.subacoes == "Alterar") {
+                const fimDate2 = new Date(this.antigosubdate_h)
+                return (today > fimDate1 || today > fimDate2)
+            }
+            return (today > fimDate1)
+        },
+        addRow(){
+            if(this.hasError1()) {
+                this.mensage = "Ação, data e hora não podem estar vazias e a descrição deve ter pelo menos 5 caracteres";
+                this.error = true;
+            }
+            else if(this.hasError2()) {
+                this.mensage = "A hora inicial não pode ser posterior à hora final";
+                this.error = true;
+            }
+            else if(this.hasError3()) {
+                this.mensage = "A Data do horário não pode ser anterior à data atual";
+                this.error = true;
+            }
+            else {
+                const novoSubpedido = {
+                    acoes: this.subacoes,
+                    date_h: this.subdate_h,
+                    timeinicial: this.subtimeinicial,
+                    timefinal: this.subtimefinal,
+                    descricao: this.subdescricao,
+                    antigodate_h: this.antigosubdate_h,
+                    antigotimeinicial: this.antigosubtimeinicial,
+                    antigotimefinal: this.antigosubtimefinal,
+                    antigodescricao: this.antigosubdescricao,
+                };
+                this.subpedidos.push(novoSubpedido);
+                this.clearInput();
+                this.error = false;
+            }
+        },
+    
+    },
+});
+
+var app = new Vue({
+    delimiters: ["[[", "]]"],
+    el: '#editar-pedido',
+    data(){
+        return{
+            subpedidos: [],
+            selectedOption: '',
+            showFileBox: '',
+        }
+    },
+    mounted(){
+        var a = "{{pedidos}}";
+        this.getSubPedidos(a);
+        var b = "{{tipo}}";
+        this.setSelectOption(b);
+        this.show();
+    
+	  },
+    methods: {
+        removeRow(index){
+            this.subpedidos.splice(index, 1);
+        },
+        setSelectOption(a){
+                this.selectedOption = a
+        },
+        show(){
+            if (this.selectedOption == 1)
+                this.showFileBox = 1
+            else    
+                this.showFileBox = 2
+        },
+        getSubPedidos(subpedidos){
+            if(subpedidos.length > 0){
+                let arrayValores = subpedidos.split("&#x27;");
+                for (let i = 3; i < arrayValores.length; i += 20){
+                    const novoSubpedido = {
+                        acoes: arrayValores[i],
+                        date_h: arrayValores[i+4],
+                        timeinicial: arrayValores[i+8],
+                        timefinal: arrayValores[i+12],
+                        descricao: arrayValores[i+16]
+                    };
+                    this.subpedidos.push(novoSubpedido);
+                }
+            }
+        }
+    },
+        computed: {
+            change(){
+                this.showFileBox = 1
+            }
+        }
+});
+    
+</script>
+{% endblock scripts %}

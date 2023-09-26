@@ -1,0 +1,54 @@
+{% extends 'app.html' %}
+
+{% load static %}
+
+{% block title %}- Importar{% endblock title %}
+
+{% block content %}
+
+<div style="padding: 1rem 2vw 0px;">
+  <hr>
+  <h2 class="title has-text-grey is-uppercase" style="font-size: 2.0rem;">
+      Informação sobre dados importados do ficheiro Excel de Docentes: 
+  </h2>
+
+    <h2 class="title has-text-grey is-success" style="font-size: 1.5rem;">
+        Distribuição de serviços de Docente:
+    </h2>
+    <table class="table" style="width: 100%; ">
+        <thead style="background-color: rgb(110, 248, 221);">
+            <tr>
+              <th style="text-align: center">Disciplina</th>
+              <th style="text-align: center">Instituto</th>
+              <th style="text-align: center">Turma</th>
+              <th style="text-align: center">Docente</th>
+              <th></th>
+            </tr>
+        </thead>
+        <tbody style="background-color: rgb(218, 226, 226);">
+            {% for ucs in Ucs %}
+            <tr>
+                <th style="text-align: center; font-weight: normal;">{{ucs.Disciplina}}</th>
+                <th style="text-align: center; font-weight: normal;">{{ucs.Instituto}}</th>
+                <th style="text-align: center; font-weight: normal;">{{ucs.Turma}}</th>
+                <th style="text-align: center; font-weight: normal;">{{ucs.Docente}}</th>
+
+            <!--    {% if doc.new_Doc == 'S' %}
+                         <th style="text-align: center; font-weight: normal; color:red">Este docente já está na BD</th>
+                {% else %}
+                         <th></th>
+                {% endif%} -->
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+
+{% endblock content %}
+
+{% block scripts %}
+
+  
+{% endblock scripts %}
