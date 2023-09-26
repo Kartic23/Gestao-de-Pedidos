@@ -1,6 +1,9 @@
-# LES_PROJETO
+# Aplicação Desenvolvida na cadeira de Laboratório de Engenharia de Software(LES)
 
-Antes de rodar o servidor deverá configurar as credencias da Base de Dados:
+Este projeto visa solucionar uma aplicação Web que conte com um design simples, intuitivo e limpo, de maneira que os utilizadores consigam gerir os pedidos sem complicações e de forma muito mais eficaz e fácil.
+A aplicação web permite aos docentes registar seus pedidos, receber notificações sobre o estado e obter respostas do CP. Os funcionários do CP puderam visualizar os pedidos recebidos, pesquisar e marcá-los como em análise, rejeitados ou aprovados, além de enviar respostas por e-mail aos docentes. A interação entre docentes e funcionários foi facilitada, e a aplicação possibilitou o envio de mensagens via e-mail para a Presidenta do CP, quando necessário.
+
+Antes de rodar o aplicação deverá configurar as credencias da Base de Dados:
 
 Pasta: gestaodepedidos
 
@@ -59,3 +62,6 @@ Credencias de acesso para o Professora:
 
     User: paula12
     Password: admin123admin
+
+
+
