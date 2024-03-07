@@ -79,10 +79,16 @@ Prints da APP:
 - Login:
   ![imagem](https://github.com/Kartic23/Gestao-de-Pedidos/assets/105547398/7e5c1c9f-9447-494c-9a11-402e8d212bc9)
   
-- Listar Pedidos:
+- Listar Pedidos (Docente):
   ![imagem](https://github.com/Kartic23/Gestao-de-Pedidos/assets/105547398/4ed1268f-1058-4b0c-8e2a-dbdb7eaab645)
 
-  
-- Criar Pedidos:
-- 
+- Listar Pedidos (Funcionário):
+  ![imagem](https://github.com/Kartic23/Gestao-de-Pedidos/assets/105547398/a9a4ee8e-4938-43b6-8019-b3c5ebc7471e)
+
+- Criar Pedido:
+  ![imagem](https://github.com/Kartic23/Gestao-de-Pedidos/assets/105547398/662cc736-2383-478c-854a-3a54e0cc077a)
+
+- Estatistica:
+  ![imagem](https://github.com/Kartic23/Gestao-de-Pedidos/assets/105547398/0d3c9863-57dc-4d25-81d9-172affba1f68)
+
 
