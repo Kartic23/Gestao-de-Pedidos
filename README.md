@@ -1,4 +1,4 @@
-![imagem](https://github.com/Kartic23/Gestao-de-Pedidos/assets/105547398/a2ddd88b-32e3-471a-89d8-c06175fd22a1)# Aplicação Desenvolvida na cadeira de Laboratório de Engenharia de Software(LES)
+# Aplicação Desenvolvida na cadeira de Laboratório de Engenharia de Software(LES)
 
 Este projeto visa solucionar uma aplicação Web que conte com um design simples, intuitivo e limpo, de maneira que os utilizadores consigam gerir os pedidos sem complicações e de forma muito mais eficaz e fácil.
 A aplicação web permite aos docentes registar seus pedidos, receber notificações sobre o estado e obter respostas do CP. Os funcionários do CP puderam visualizar os pedidos recebidos, pesquisar e marcá-los como em análise, rejeitados ou aprovados, além de enviar respostas por e-mail aos docentes. A interação entre docentes e funcionários foi facilitada, e a aplicação possibilitou o envio de mensagens via e-mail para a Presidenta do CP, quando necessário.
