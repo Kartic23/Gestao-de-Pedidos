@@ -1,4 +1,4 @@
-# Aplicação Desenvolvida na cadeira de Laboratório de Engenharia de Software(LES)
+![imagem](https://github.com/Kartic23/Gestao-de-Pedidos/assets/105547398/a2ddd88b-32e3-471a-89d8-c06175fd22a1)# Aplicação Desenvolvida na cadeira de Laboratório de Engenharia de Software(LES)
 
 Este projeto visa solucionar uma aplicação Web que conte com um design simples, intuitivo e limpo, de maneira que os utilizadores consigam gerir os pedidos sem complicações e de forma muito mais eficaz e fácil.
 A aplicação web permite aos docentes registar seus pedidos, receber notificações sobre o estado e obter respostas do CP. Os funcionários do CP puderam visualizar os pedidos recebidos, pesquisar e marcá-los como em análise, rejeitados ou aprovados, além de enviar respostas por e-mail aos docentes. A interação entre docentes e funcionários foi facilitada, e a aplicação possibilitou o envio de mensagens via e-mail para a Presidenta do CP, quando necessário.
@@ -68,5 +68,21 @@ Credencias de acesso para o Professora:
     User: paula12
     Password: admin123admin
 
+Prints da APP:
 
+- HomePage:
+  ![imagem](https://github.com/Kartic23/Gestao-de-Pedidos/assets/105547398/3b7e7a64-fc4b-40f8-aa81-2f16b6281a9f)
+
+- Register:
+  ![imagem](https://github.com/Kartic23/Gestao-de-Pedidos/assets/105547398/f4339dfe-4e9b-4dfb-a530-5ecfaf63efe6)
+
+- Login:
+  ![imagem](https://github.com/Kartic23/Gestao-de-Pedidos/assets/105547398/7e5c1c9f-9447-494c-9a11-402e8d212bc9)
+  
+- Listar Pedidos:
+  ![imagem](https://github.com/Kartic23/Gestao-de-Pedidos/assets/105547398/4ed1268f-1058-4b0c-8e2a-dbdb7eaab645)
+
+  
+- Criar Pedidos:
+- 
 
