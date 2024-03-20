@@ -8,6 +8,8 @@ Este trabalho foi realizado por:
 - Daniel Ferros Fernandes
 - João Pedro Gomes de Almeida
 
+[Relatório](https://github.com/Kartic23/Gestao-de-Pedidos/blob/main/Relat%C3%B3rio%20LES%20Grupo%202.pdf)<br>
+
 Antes de rodar o aplicação deverá configurar as credencias da Base de Dados:
 
 Pasta: gestaodepedidos
